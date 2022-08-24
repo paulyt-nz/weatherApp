@@ -42,6 +42,7 @@ app.post("/api/notificationSub", async (req, res) => {
 
     const db = client.db();
     // todo
+    console.log(req.body)
     const notificationRequest = req.body as WeatherNotificationSubscription;
     // validate the request
     // store it in the database in the subs collection

@@ -56,6 +56,9 @@ submitBtn.addEventListener("click", async (event) => {
     const response = await fetch("./api/notificationSub", {
       body: JSON.stringify(request),
       method: "POST",
+      headers: {
+        "content-type": "application/JSON"
+      }
     });
 
     if (!response.ok) {
@@ -65,6 +68,6 @@ submitBtn.addEventListener("click", async (event) => {
     window.alert("Congrats you are now subscribed!");
   } catch (error) {
     console.error(error);
-    window.alert(error.message);
+    window.alert((error as any)?.message);
   }
 });
