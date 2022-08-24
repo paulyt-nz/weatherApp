@@ -41,15 +41,30 @@ submitBtn.addEventListener("click", async (event) => {
   const location = document.getElementById(
     "location"
   ) as HTMLInputElement | null;
-  if (!location) {
+  if (!location || !location.value) {
     window.alert("Missing location!");
     return;
+  }
+
+  const windDir = document.getElementById("windDirection") as HTMLSelectElement | null;
+  if(!windDir || !windDir.selectedOptions) {
+    window.alert('Missing Wind Direction')
+    return;
+  }
+
+  const selectedWindDirs: WindDirection[] = []
+  for (let i = 0; i < windDir.selectedOptions.length; i++) {
+    const element = windDir.selectedOptions[i];
+
+    selectedWindDirs.push(element.value as WindDirection)
   }
 
   const request: WeatherNotificationSubscription = {
     email: email.value,
     location: location.value,
-    constraints: {} as any, // todo fill in the constraints
+    constraints: {
+      windDir: selectedWindDirs
+    }, // todo fill in the constraints
   };
 
   try {
