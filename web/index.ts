@@ -74,7 +74,7 @@ submitBtn.addEventListener("click", async (event) => {
     location: location.value,
     constraints: {
       windDir: selectedWindDirs
-      windSpeed: {
+      windSpeed: { //not sure why it is squiggly
         min: parseInt(windSpeedMin.value),
         max: parseInt(windSpeedMax.value)
       }

@@ -7,28 +7,40 @@
   <h1>Weather notification Service</h1>
 
   <form>
-    <label for="email">Email Address</label>
-    <input type="email" id="email" name="emai" />
+    <div>
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="emai" />
+    </div>
 
-    <label for="location">Location</label>
-    <input type="text" id="location" name="location" />
+    <div>
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" />
+    </div>
 
-    <label for="windDirection">Wind Direction</label>
+    <div>
+      <label for="windDirection">Wind Direction</label>
+      <select name="windDirection" id="windDirection" multiple>
+          <option value="N">North</option>
+          <option value="NE">NE</option>
+          <option value="E">E</option>
+          <option value="SE">S</option>
+          <option value="S">S</option>
+          <option value="SW">SW</option>
+          <option value="W">W</option>
+          <option value="NW">NW</option>
+      </select>
+    </div>
 
-<select name="windDirection" id="windDirection" multiple>
-    <option value="N">North</option>
-    <option value="NE">NE</option>
-    <option value="E">E</option>
-    <option value="SE">S</option>
-    <option value="S">S</option>
-    <option value="SW">SW</option>
-    <option value="W">W</option>
-    <option value="NW">NW</option>
-  </select>
 
-
-
-
+    <div>
+      <p>Wind Speed</p>
+      <label for="windSpeedMin">from</label>
+      <input type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100" placeholder="0km">
+      <!-- need to make sure that max is bigger than the min  -->
+      <!--  -->
+      <label for="windSpeedMax">to</label>
+      <input type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50km">
+    </div>
 
     <input type="submit" value="Submit" id="submit" />
 
