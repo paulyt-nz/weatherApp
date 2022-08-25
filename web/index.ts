@@ -38,9 +38,7 @@ submitBtn.addEventListener("click", async (event) => {
     window.alert("Missing email address!");
     return;
   }
-  const location = document.getElementById(
-    "location"
-  ) as HTMLInputElement | null;
+  const location = document.getElementById("location") as HTMLInputElement | null;
   if (!location || !location.value) {
     window.alert("Missing location!");
     return;
@@ -59,11 +57,27 @@ submitBtn.addEventListener("click", async (event) => {
     selectedWindDirs.push(element.value as WindDirection)
   }
 
+  const windSpeedMin = document.getElementById("windSpeedMin") as HTMLSelectElement | null;
+  if(!windSpeedMin || !windSpeedMin.value) {
+    window.alert('Missing Wind Direction')
+    return;
+  }
+  const windSpeedMax = document.getElementById("windSpeedMax") as HTMLSelectElement | null;
+   if(!windSpeedMax || !windSpeedMax.value) {
+    window.alert('Missing Wind Direction')
+    return;
+  }
+
+
   const request: WeatherNotificationSubscription = {
     email: email.value,
     location: location.value,
     constraints: {
       windDir: selectedWindDirs
+      windSpeed: {
+        min: parseInt(windSpeedMin.value),
+        max: parseInt(windSpeedMax.value)
+      }
     }, // todo fill in the constraints
   };
 
