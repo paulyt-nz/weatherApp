@@ -59,12 +59,34 @@ submitBtn.addEventListener("click", async (event) => {
 
   const windSpeedMin = document.getElementById("windSpeedMin") as HTMLSelectElement | null;
   if(!windSpeedMin || !windSpeedMin.value) {
-    window.alert('Missing Wind Direction')
+    window.alert('Missing Wind Speed Minimum')
     return;
   }
   const windSpeedMax = document.getElementById("windSpeedMax") as HTMLSelectElement | null;
    if(!windSpeedMax || !windSpeedMax.value) {
-    window.alert('Missing Wind Direction')
+    window.alert('Missing Wind Speed Maximum')
+    return;
+  }
+
+  const tempMin = document.getElementById("tempMin") as HTMLSelectElement | null;
+  if(!tempMin || !tempMin.value) {
+    window.alert('Missing Temperature Minimum')
+    return;
+  }
+  const tempMax = document.getElementById("tempMax") as HTMLSelectElement | null;
+   if(!tempMax || !tempMax.value) {
+    window.alert('Missing Temperature Maximum')
+    return;
+  }
+
+  const humidityMin = document.getElementById("humidityMin") as HTMLSelectElement | null;
+  if(!humidityMin || !humidityMin.value) {
+    window.alert('Missing Humidity Minimum')
+    return;
+  }
+  const humidityMax = document.getElementById("humidityMax") as HTMLSelectElement | null;
+   if(!humidityMax || !humidityMax.value) {
+    window.alert('Missing Humidity Maximum')
     return;
   }
 
@@ -73,10 +95,18 @@ submitBtn.addEventListener("click", async (event) => {
     email: email.value,
     location: location.value,
     constraints: {
-      windDir: selectedWindDirs
-      windSpeed: { //not sure why it is squiggly
+      windDir: selectedWindDirs,
+      windSpeed: {
         min: parseInt(windSpeedMin.value),
         max: parseInt(windSpeedMax.value)
+      },
+      temperature: {
+        min: parseInt(tempMin.value),
+        max: parseInt(tempMax.value)
+      },
+      humidity: {
+        min: parseInt(humidityMin.value),
+        max: parseInt(humidityMax.value)
       }
     }, // todo fill in the constraints
   };
