@@ -1,75 +1,87 @@
 <!DOCTYPE html>
+
 <head>
   <link href="./main.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 
 <body>
-  <h1>Weather notification Service</h1>
+  <div class="row">
+    <h1 class="text-center mb-3 mt-3">Weather notification Service</h1>
+    <div class="col-md-4 offset-md-4">
+      <form>
+        <div class="mb-3">
+          <label class="form-label" for="email">Email Address</label>
+          <input class="form-control" type="email" id="email" name="email" />
+        </div>
 
-  <form>
-    <div>
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="emai" />
+        <div class="mb-3">
+          <label class="form-label" for="location">Location</label>
+          <input class="form-control" type="text" id="location" name="location" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="windDirection">Wind Direction</label>
+          <select class="form-control" name="windDirection" id="windDirection" multiple>
+            <option value="N">North</option>
+            <option value="NE">NE</option>
+            <option value="E">E</option>
+            <option value="SE">SE</option>
+            <option value="S">S</option>
+            <option value="SW">SW</option>
+            <option value="W">W</option>
+            <option value="NW">NW</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <p>Wind Speed</p>
+          <label class="form-label" for="windSpeedMin">from</label>
+          <input class="form-control" type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100"
+            placeholder="0kph">
+          <!-- need to make sure that max is bigger than the min  -->
+          <label class="form-label" for="windSpeedMax">to</label>
+          <input class="form-control" type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100"
+            placeholder="50kph">
+        </div>
+
+        <div class="mb-3">
+          <p>Temperature</p>
+          <label class="form-label" for="tempMin">from</label>
+          <input class="form-control" type="number" id="tempMin" name="tempMin" min="-10" max="45"
+            placeholder="-10&#8451">
+          <!-- need to make sure that max is bigger than the min  -->
+          <label class="form-label" for="tempMax">to</label>
+          <input class="form-control" type="number" id="tempMax" name="tempMax" min="-10" max="45"
+            placeholder="40&#8451">
+        </div>
+
+        <div class="mb-3">
+          <p>Humidity</p>
+          <label class="form-label" for="humidityMin">from</label>
+          <input class="form-control" type="number" id="humidityMin" name="humidityMin" min="10" max="100"
+            placeholder="10%">
+          <!-- need to make sure that max is bigger than the min  -->
+          <label class="form-label" for="humidityMax">to</label>
+          <input class="form-control" type="number" id="humidityMax" name="humidityMax" min="10" max="100"
+            placeholder="100%">
+        </div>
+
+        <div class="mb-3">
+          <input class="btn btn-success" type="submit" value="Submit" id="submit" />
+        </div>
+
+      </form>
     </div>
+  </div>
 
-    <div>
-      <label for="location">Location</label>
-      <input type="text" id="location" name="location" />
-    </div>
-
-    <div>
-      <label for="windDirection">Wind Direction</label>
-      <select name="windDirection" id="windDirection" multiple>
-          <option value="N">North</option>
-          <option value="NE">NE</option>
-          <option value="E">E</option>
-          <option value="SE">SE</option>
-          <option value="S">S</option>
-          <option value="SW">SW</option>
-          <option value="W">W</option>
-          <option value="NW">NW</option>
-      </select>
-    </div>
-
-
-    <div>
-      <p>Wind Speed</p>
-      <label for="windSpeedMin">from</label>
-      <input type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100" placeholder="0kph">
-      <!-- need to make sure that max is bigger than the min  -->
-      <label for="windSpeedMax">to</label>
-      <input type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50kph">
-    </div>
-
-    <div>
-      <p>Temperature</p>
-      <label for="tempMin">from</label>
-      <input type="number" id="tempMin" name="tempMin" min="-10" max="45" placeholder="-10&#8451">
-      <!-- need to make sure that max is bigger than the min  -->
-      <label for="tempMax">to</label>
-      <input type="number" id="tempMax" name="tempMax" min="-10" max="45" placeholder="40&#8451">
-    </div>
-
-    <div>
-      <p>Humidity</p>
-      <label for="humidityMin">from</label>
-      <input type="number" id="humidityMin" name="humidityMin" min="10" max="100" placeholder="10%">
-      <!-- need to make sure that max is bigger than the min  -->
-      <label for="humidityMax">to</label>
-      <input type="number" id="humidityMax" name="humidityMax" min="10" max="100" placeholder="100%">
-    </div>
-
-    <input type="submit" value="Submit" id="submit" />  
-
-    <!--     todo add these to the form
-    windDir: WindDirection[];
-
-  windSpeed?: { min?: number; max?: number };
-
-  temperature?: { min?: number; max?: number };
-
-  humidity?: { min?: number; max?: number }; -->
-  </form>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+    integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+    integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+    crossorigin="anonymous"></script>
 </body>
 
 <script src="./index.js"></script>
