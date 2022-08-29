@@ -3,26 +3,8 @@ require("dotenv").config();
 import express from "express";
 
 import { client } from "./db/db";
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
 
-type WindDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
-
-type WeatherConstaint = {
-  windDir: WindDirection[];
-
-  windSpeed?: { min?: number; max?: number };
-
-  temperature?: { min?: number; max?: number };
-
-  humidity?: { min?: number; max?: number };
-};
-
-type WeatherNotificationSubscription = {
-  location: string;
-
-  constraints: WeatherConstaint;
-
-  email: string;
-};
 
 const port = process.env.PORT ?? 3000;
 

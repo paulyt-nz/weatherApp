@@ -1,29 +1,6 @@
-type WindDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
 
-type WeatherConstaint = {
-  windDir: WindDirection[];
 
-  windSpeed?: { min?: number; max?: number };
-
-  temperature?: { min?: number; max?: number };
-
-  humidity?: { min?: number; max?: number };
-};
-
-type WeatherNotificationSubscription = {
-  location: string;
-
-  constraints: WeatherConstaint;
-
-  email: string;
-};
-
-type Weather = {
-  windSpeed: number;
-  temperature: number;
-  humidity: number;
-  windDir: WindDirection;
-};
 
 const submitBtn = document.getElementById("submit") as HTMLButtonElement | null;
 if (!submitBtn) throw new Error("wtf");
@@ -45,7 +22,7 @@ submitBtn.addEventListener("click", async (event) => {
   }
 
   const windDir = document.getElementById("windDirection") as HTMLSelectElement | null;
-  if(!windDir || !windDir.selectedOptions) {
+  if (!windDir || !windDir.selectedOptions) {
     window.alert('Missing Wind Direction')
     return;
   }
@@ -58,34 +35,34 @@ submitBtn.addEventListener("click", async (event) => {
   }
 
   const windSpeedMin = document.getElementById("windSpeedMin") as HTMLSelectElement | null;
-  if(!windSpeedMin || !windSpeedMin.value) {
+  if (!windSpeedMin || !windSpeedMin.value) {
     window.alert('Missing Wind Speed Minimum')
     return;
   }
   const windSpeedMax = document.getElementById("windSpeedMax") as HTMLSelectElement | null;
-   if(!windSpeedMax || !windSpeedMax.value) {
+  if (!windSpeedMax || !windSpeedMax.value) {
     window.alert('Missing Wind Speed Maximum')
     return;
   }
 
   const tempMin = document.getElementById("tempMin") as HTMLSelectElement | null;
-  if(!tempMin || !tempMin.value) {
+  if (!tempMin || !tempMin.value) {
     window.alert('Missing Temperature Minimum')
     return;
   }
   const tempMax = document.getElementById("tempMax") as HTMLSelectElement | null;
-   if(!tempMax || !tempMax.value) {
+  if (!tempMax || !tempMax.value) {
     window.alert('Missing Temperature Maximum')
     return;
   }
 
   const humidityMin = document.getElementById("humidityMin") as HTMLSelectElement | null;
-  if(!humidityMin || !humidityMin.value) {
+  if (!humidityMin || !humidityMin.value) {
     window.alert('Missing Humidity Minimum')
     return;
   }
   const humidityMax = document.getElementById("humidityMax") as HTMLSelectElement | null;
-   if(!humidityMax || !humidityMax.value) {
+  if (!humidityMax || !humidityMax.value) {
     window.alert('Missing Humidity Maximum')
     return;
   }
