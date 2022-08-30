@@ -1,39 +1,31 @@
 import { setTimeout } from "timers/promises";
-
-type WindDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
-
-type WeatherConstaint = {
-  windDir: WindDirection[];
-
-  windSpeed?: { min?: number; max?: number };
-
-  temperature?: { min?: number; max?: number };
-
-  humidity?: { min?: number; max?: number };
-};
-
-type WeatherNotificationSubscription = {
-  location: string;
-
-  constraints: WeatherConstaint;
-
-  email: string;
-};
-
-type Weather = {
-  windSpeed: number;
-  temperature: number;
-  humidity: number;
-  windDir: WindDirection;
-};
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
+import { MongoClient } from 'mongodb';
 
 async function connectToDB() {
-  // todo
+  const uri = process.env.MONGO_DB;
+  if (!uri) throw new Error("Missing MONGO_DB connection string from .env vars");
+
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect()
+    console.log('Connected to database')
+  }
+  catch (err) {
+    console.log(err)
+    throw err
+  }
+  return client
 }
 
 async function getRequests(): Promise<WeatherNotificationSubscription[]> {
   // todo check database for requests
   // todo support pagination or streaming
+
+
+  // need to pull the request out of the database to an array and return the array
+
   return [];
 }
 
