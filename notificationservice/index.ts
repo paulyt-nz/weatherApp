@@ -66,6 +66,16 @@ async function sendNotification(notification: string): Promise<boolean> {
   throw new Error("Function not implemented.");
 }
 
+
+export function checkOneWeatherWithConstraints(constraintValueMin: number, constraintValueMax: number, weatherValue: number ): boolean {
+  if (weatherValue > constraintValueMin && weatherValue < constraintValueMax) {
+    return true
+  } else {
+    return false
+  }
+}
+
+
 // todo use jest to test
 export function checkWeatherMatchesConstraints(
   constraints: WeatherConstaint,
