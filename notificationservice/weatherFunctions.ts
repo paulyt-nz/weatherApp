@@ -1,5 +1,5 @@
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
-import { Db, MongoClient } from 'mongodb';
+import { type Db, MongoClient } from 'mongodb';
 
 export async function getRequests(db: Db): Promise<WeatherNotificationSubscription[]> {
     // todo check database for requests

@@ -16,6 +16,8 @@ export type WeatherNotificationSubscription = {
     constraints: WeatherConstaint;
 
     email: string;
+
+    notified_at: Date | null;
 };
 
 export type Weather = {

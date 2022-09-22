@@ -8,10 +8,10 @@ export function createNotification(
     // e.g. the weather is going to be x at y matching your constraints
     
     const { location } = request;
-  
+    
     const { windSpeed, windDir, humidity, temperature } = request.constraints
-  
-  
+    
+    
     let notification = `Looks like the weather at ${location} is just what you were after!`
   
     return notification

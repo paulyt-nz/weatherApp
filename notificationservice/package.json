@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc",
+    "start": "node index.js",
+    "build_start": "npm run build && npm run start",
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +23,7 @@
     "ts-jest": "^29.0.0"
   },
   "dependencies": {
+    "dotenv": "^16.0.2",
     "mongodb": "^4.9.0"
   }
 }
