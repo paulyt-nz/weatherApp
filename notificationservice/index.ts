@@ -27,6 +27,7 @@ async function connectToDB(): Promise<Db> {
 
 async function poll(db: Db) {
   console.info('Starting polling for requests')
+  // TODO - add in a filter for notifications that have been sent out that day
   while (true) {
     const requests = await getRequests(db);
     
@@ -41,6 +42,7 @@ async function poll(db: Db) {
       }
 
       if (checkWeatherMatchesConstraints(request.constraints, weather)) {
+        // TODO - an another check in here for notifications that have already gone out
         const notification = createNotification(weather, request);
         console.debug(`sENDING ${notification}`)
         await sendNotification(notification);
