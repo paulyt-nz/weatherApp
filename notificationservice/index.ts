@@ -44,7 +44,7 @@ async function poll(db: Db) {
       if (checkWeatherMatchesConstraints(request.constraints, weather)) {
         // TODO - an another check in here for notifications that have already gone out
         const notification = createNotification(weather, request);
-        console.debug(`sENDING ${notification}`)
+        console.debug(`Sending: ${notification}`)
         await sendNotification(notification);
         // todo mark as notified
       }
