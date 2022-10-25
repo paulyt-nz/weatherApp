@@ -26,13 +26,27 @@ async function connectToDB(): Promise<Db> {
 }
 
 async function poll(db: Db) {
+    
   console.info('Starting polling for requests')
   while (true) {
     const requests = await getRequests(db);
-    
+
     console.debug(requests)
     for (const request of requests) {
       console.debug(`Checking weather for ${request.email} request ${request.location}`)
+
+      // if already notified within 24 hours skip to next request
+      if (request.notified_at) {
+        let now = new Date();
+        let timeOneDayAgo = now.getDate() - 24 * 60 * 60 * 1000 
+        
+        let timeNotified = request.notified_at?.getTime()
+
+        if (timeNotified < timeOneDayAgo) {
+          continue
+        } 
+      }
+
       const weather = await getWeather(request.location);
       console.debug(weather)
       if (!weather) {
@@ -42,7 +56,7 @@ async function poll(db: Db) {
 
       if (checkWeatherMatchesConstraints(request.constraints, weather)) {
         const notification = createNotification(weather, request);
-        console.debug(`sENDING ${notification}`)
+        console.debug(`Sending ${notification}`)
         await sendNotification(notification);
         // todo mark as notified
       }
