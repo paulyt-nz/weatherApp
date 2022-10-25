@@ -17,7 +17,17 @@ export function createNotification(
     return notification
   }
   
-export async function sendNotification(notification: string): Promise<boolean> {
+export async function sendNotification(notification: string): Promise<boolean | void> {
     // this is where you would send the email
-    throw new Error("Function not implemented.");
+
+    // For now we will just print notification to the console so I can see it is working
+    console.log('******************************************')
+    console.log('******************************************')
+    console.log('******************************************')
+    console.log(notification)
+    console.log('******************************************')
+    console.log('******************************************')
+    console.log('******************************************')
+
+   // throw new Error("Function not implemented.");
   }
