@@ -17,7 +17,7 @@ export function createNotification(
     return notification
   }
   
-export async function sendNotification(notification: string): Promise<boolean | void> {
+export async function sendNotification(notification: string): Promise<void> {
     // this is where you would send the email
 
     // For now we will just print notification to the console so I can see it is working
