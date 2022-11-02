@@ -2,7 +2,7 @@ import { setTimeout } from "timers/promises";
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
 import { Db, MongoClient } from 'mongodb';
 import { getRequests, getWeather, checkWeatherMatchesConstraints } from './weatherFunctions';
-import { createNotification, sendNotification } from './notificationFunctions';
+import { createNotification, sendNotification, checkNotifiedToday } from './notificationFunctions';
 require("dotenv").config();
 
 
@@ -25,38 +25,31 @@ async function connectToDB(): Promise<Db> {
   }
 }
 
+
 async function poll(db: Db) {
-    
   console.info('Starting polling for requests')
-  // TODO - add in a filter for notifications that have been sent out that day
+
   while (true) {
     const requests = await getRequests(db);
-
     console.debug(requests)
+
     for (const request of requests) {
       console.debug(`Checking weather for ${request.email} request ${request.location}`)
 
-      // if already notified within 24 hours skip to next request
-      // if (request.notified_at) {
-      //   let now = new Date();
-      //   let timeOneDayAgo = now.getDate() - 24 * 60 * 60 * 1000 
-        
-      //   let timeNotified = request.notified_at?.getTime()
-
-      //   if (timeNotified < timeOneDayAgo) {
-      //     continue
-      //   } 
-      // }
+      if (checkNotifiedToday(request)) {
+        console.debug(`Notified today for ${request.email} request ${request.location}`)
+        continue;
+      }
 
       const weather = await getWeather(request.location);
       console.debug(weather)
+
       if (!weather) {
         console.error(`No weather found for ${request.location}`);
         continue;
       }
 
       if (checkWeatherMatchesConstraints(request.constraints, weather)) {
-        // TODO - an another check in here for notifications that have already gone out
         const notification = createNotification(weather, request);
         console.debug(`Sending: ${notification}`)
         await sendNotification(notification);
