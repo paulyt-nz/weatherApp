@@ -32,9 +32,9 @@ export async function sendNotification(notification: string): Promise<void> {
    // throw new Error("Function not implemented.");
   }
 
-  export function checkNotifiedToday(request: WeatherNotificationSubscription): boolean {
+  export function checkNotifiedToday(request: WeatherNotificationSubscription, timeNow: number): boolean {
     if (request.notified_at) {
-      const time24HoursAgo = Date.now() - 24 * 60 * 60 * 1000 
+      const time24HoursAgo = timeNow - 24 * 60 * 60 * 1000
       const timeNotified = request.notified_at.getTime()
      
       if (timeNotified > time24HoursAgo) {

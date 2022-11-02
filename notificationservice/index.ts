@@ -32,15 +32,15 @@ async function poll(db: Db) {
   while (true) {
     const requests = await getRequests(db);
     console.debug(requests)
+    const timeNow = Date.now()
 
     for (const request of requests) {
-      console.debug(`Checking weather for ${request.email} request ${request.location}`)
-
-      if (checkNotifiedToday(request)) {
+      if (checkNotifiedToday(request, timeNow)) {
         console.debug(`Notified today for ${request.email} request ${request.location}`)
         continue;
       }
-
+      
+      console.debug(`Checking weather for ${request.email} request ${request.location}`)
       const weather = await getWeather(request.location);
       console.debug(weather)
 
@@ -53,9 +53,7 @@ async function poll(db: Db) {
         const notification = createNotification(weather, request);
         console.debug(`Sending: ${notification}`)
         await sendNotification(notification);
-        // update notified_at in db
-        let timeNotified = new Date()
-        await db.collection('subs').updateOne({_id: request._id}, { $set: {notified_at : timeNotified}})
+        await db.collection('subs').updateOne({_id: request._id}, { $set: {notified_at : timeNow}})
       }
     }
 
