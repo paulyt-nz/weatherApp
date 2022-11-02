@@ -37,16 +37,16 @@ async function poll(db: Db) {
       console.debug(`Checking weather for ${request.email} request ${request.location}`)
 
       // if already notified within 24 hours skip to next request
-      if (request.notified_at) {
-        let now = new Date();
-        let timeOneDayAgo = now.getDate() - 24 * 60 * 60 * 1000 
+      // if (request.notified_at) {
+      //   let now = new Date();
+      //   let timeOneDayAgo = now.getDate() - 24 * 60 * 60 * 1000 
         
-        let timeNotified = request.notified_at?.getTime()
+      //   let timeNotified = request.notified_at?.getTime()
 
-        if (timeNotified < timeOneDayAgo) {
-          continue
-        } 
-      }
+      //   if (timeNotified < timeOneDayAgo) {
+      //     continue
+      //   } 
+      // }
 
       const weather = await getWeather(request.location);
       console.debug(weather)
@@ -60,7 +60,9 @@ async function poll(db: Db) {
         const notification = createNotification(weather, request);
         console.debug(`Sending: ${notification}`)
         await sendNotification(notification);
-        // todo mark as notified
+        // update notified_at in db
+        let timeNotified = new Date()
+        await db.collection('subs').updateOne({_id: request._id}, { $set: {notified_at : timeNotified}})
       }
     }
 
