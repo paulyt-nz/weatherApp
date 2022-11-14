@@ -36,7 +36,7 @@ export async function sendNotification(notification: string): Promise<void> {
     if (request.notified_at) {
       const time24HoursAgo = Date.now() - 24 * 60 * 60 * 1000 
       const timeNotified = request.notified_at.getTime()
-     
+      
       if (timeNotified > time24HoursAgo) {
         return true
       } 
