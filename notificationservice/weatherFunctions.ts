@@ -1,5 +1,8 @@
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
 import { type Db, MongoClient } from 'mongodb';
+import axios from 'axios';
+
+require("dotenv").config();
 
 export async function getRequests(db: Db): Promise<WeatherNotificationSubscription[]> {
     // todo check database for requests
@@ -9,9 +12,36 @@ export async function getRequests(db: Db): Promise<WeatherNotificationSubscripti
   
     return collection.find().toArray()
   }
+
+export function convertLocationToCoords(location: string): number[] {
+    // todo convert location to coordinates
+    return [41.04, 174.88] //Pukerua Bay for now
+  }
   
 export async function getWeather(location: string): Promise<Weather | null> {
-     const getRandomWind = (): WindDirection => {
+  const apiKey = process.env.OPEN_WEATHER;
+  const [lat, lon] = convertLocationToCoords(location);
+  
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+
+  console.log(apiKey,lat,lon)
+  console.log(url)
+
+  try{
+    const res = await axios.get(url);
+    console.log(res.data);
+  } 
+  catch (err) {
+    console.log("ERROR", err)
+  }
+
+  //todo - take weather data from res.data and make a Weather object
+  
+    return null
+  }
+
+export async function getFakeWeather(location: string): Promise<Weather | null> {
+   const getRandomWind = (): WindDirection => {
         const directions: WindDirection[] = ["N" , "NE" , "E" , "SE",  "S" , "SW" , "W" , "NW"]
         return directions[Math.floor(Math.random() * directions.length)]
      }
@@ -25,7 +55,7 @@ export async function getWeather(location: string): Promise<Weather | null> {
   
     }
     return Promise.resolve(weather)
-  }
+}
   
 export function checkOneWeatherWithConstraints(constraintValueMin: number, constraintValueMax: number, weatherValue: number ): boolean {
     if (weatherValue > constraintValueMin && weatherValue < constraintValueMax) {
