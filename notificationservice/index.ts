@@ -56,7 +56,8 @@ async function poll(db: Db) {
         // update notified_at in db
         let timeNotified = new Date()
         await db.collection('subs').updateOne({_id: request._id}, { $set: {notified_at : timeNotified}})
-      }
+      } 
+      else console.debug(`No match`)
     }
 
     await setTimeout(5000);

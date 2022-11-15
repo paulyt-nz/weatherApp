@@ -17,6 +17,11 @@ export function convertLocationToCoords(location: string): number[] {
     // todo convert location to coordinates
     return [41.04, 174.88] //Pukerua Bay for now
   }
+
+export function convertDegToCompass(num: number): WindDirection {
+    // todo convert degrees to compass direction
+    return 'N' // northerly for now
+  }
   
 export async function getWeather(location: string): Promise<Weather | null> {
   const apiKey = process.env.OPEN_WEATHER;
@@ -29,15 +34,23 @@ export async function getWeather(location: string): Promise<Weather | null> {
 
   try{
     const res = await axios.get(url);
-    console.log(res.data);
+    //console.log(res.data);
+
+    const weather: Weather = {
+      temperature: res.data.main.temp,
+      windSpeed: res.data.wind.speed,
+      windDir: convertDegToCompass(res.data.wind.deg),
+      humidity: res.data.main.humidity,
+    }
+    //console.log(weather)
+    return Promise.resolve(weather)
   } 
   catch (err) {
     console.log("ERROR", err)
-  }
-
-  //todo - take weather data from res.data and make a Weather object
-  
     return null
+  }
+  
+    
   }
 
 export async function getFakeWeather(location: string): Promise<Weather | null> {
