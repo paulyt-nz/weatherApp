@@ -13,28 +13,65 @@ export async function getRequests(db: Db): Promise<WeatherNotificationSubscripti
     return collection.find().toArray()
   }
 
-export function convertLocationToCoords(location: string): number[] {
-    // todo convert location to coordinates
-    return [41.04, 174.88] //Pukerua Bay for now
+export async function convertLocationToCoords(location: string): Promise<number[] | null> {
+    const apiKey = process.env.MAPBOX;
+
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${apiKey}`
+
+    try {
+        const res = await axios.get(url)
+        console.debug(res.data)
+        const [lon, lat] : number[] = res.data.features[0].center
+        console.debug('lat: ', lat, 'long: ', lon)
+        return Promise.resolve([lat, lon])
+    }
+    catch (err) {
+        console.error('ERROR', err)
+        return null
+    }
   }
 
-export function convertDegToCompass(num: number): WindDirection {
-    // todo convert degrees to compass direction
-    return 'N' // northerly for now
+export function convertDegToCompass(deg: number): WindDirection {
+    if (deg < 0 || deg > 360) {
+      throw new Error('Invalid angle')
+    }
+  
+    if (deg < 22.5) {
+        return 'N'
+    } else if (deg < 67.5) {  
+        return 'NE'
+    } else if (deg < 112.5) {
+        return 'E'
+    } else if (deg < 157.5) {
+        return 'SE'
+    } else if (deg < 202.5) {
+        return 'S'
+    } else if (deg < 247.5) {
+        return 'SW'
+    } else if (deg < 292.5) {
+        return 'W'
+    } else if (deg < 337.5) {
+        return 'NW'
+    } else {
+        return 'N'
   }
+}
   
 export async function getWeather(location: string): Promise<Weather | null> {
   const apiKey = process.env.OPEN_WEATHER;
-  const [lat, lon] = convertLocationToCoords(location);
+
+  const coords = await convertLocationToCoords(location);
+  if (!coords) {
+    console.error('No coords found')
+    return null
+  }
+  const [lat, lon] = coords;
   
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
 
-  console.log(apiKey,lat,lon)
-  console.log(url)
-
   try{
     const res = await axios.get(url);
-    //console.log(res.data);
+    console.debug('Data from OpenWeather:', res.data);
 
     const weather: Weather = {
       temperature: res.data.main.temp,
@@ -42,16 +79,15 @@ export async function getWeather(location: string): Promise<Weather | null> {
       windDir: convertDegToCompass(res.data.wind.deg),
       humidity: res.data.main.humidity,
     }
-    //console.log(weather)
+
+    console.debug('weather: ', weather);
     return Promise.resolve(weather)
   } 
   catch (err) {
-    console.log("ERROR", err)
+    console.error("ERROR", err)
     return null
   }
-  
-    
-  }
+}
 
 export async function getFakeWeather(location: string): Promise<Weather | null> {
    const getRandomWind = (): WindDirection => {
