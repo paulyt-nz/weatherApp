@@ -1,6 +1,6 @@
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
 import { type Db, MongoClient } from 'mongodb';
-import axios from 'axios';
+import fetch from 'node-fetch';
 
 require("dotenv").config();
 
@@ -13,16 +13,18 @@ export async function getRequests(db: Db): Promise<WeatherNotificationSubscripti
     return collection.find().toArray()
   }
 
-export async function convertLocationToCoords(location: string): Promise<number[] | null> {
+  export async function convertLocationToCoords (location: string): Promise<number[] | null> {
     const apiKey = process.env.MAPBOX;
-
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${apiKey}`
 
     try {
-        const res = await axios.get(url)
-        console.debug(res.data)
-        const [lon, lat] : number[] = res.data.features[0].center
+        const res = await fetch(url)
+        const data = await res.json()
+        console.debug(data)
+
+        const [lon, lat] : number[] = data.features[0].center
         console.debug('lat: ', lat, 'long: ', lon)
+
         return Promise.resolve([lat, lon])
     }
     catch (err) {
@@ -59,8 +61,8 @@ export function convertDegToCompass(deg: number): WindDirection {
   
 export async function getWeather(location: string): Promise<Weather | null> {
   const apiKey = process.env.OPEN_WEATHER;
-
   const coords = await convertLocationToCoords(location);
+  
   if (!coords) {
     console.error('No coords found')
     return null
@@ -70,14 +72,15 @@ export async function getWeather(location: string): Promise<Weather | null> {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
 
   try{
-    const res = await axios.get(url);
-    console.debug('Data from OpenWeather:', res.data);
+    const res = await fetch(url);
+    const data = await res.json();
+    console.debug('Data from OpenWeather:', data);
 
     const weather: Weather = {
-      temperature: res.data.main.temp,
-      windSpeed: res.data.wind.speed,
-      windDir: convertDegToCompass(res.data.wind.deg),
-      humidity: res.data.main.humidity,
+      temperature: data.main.temp,
+      windSpeed: data.wind.speed,
+      windDir: convertDegToCompass(data.wind.deg),
+      humidity: data.main.humidity,
     }
 
     console.debug('weather: ', weather);
