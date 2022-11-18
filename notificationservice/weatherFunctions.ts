@@ -4,6 +4,16 @@ import fetch from 'node-fetch';
 
 require("dotenv").config();
 
+const MapBoxApiKey = process.env.MAPBOX;
+if (!MapBoxApiKey) {
+  throw new Error("Missing MAPBOX API key from .env vars");
+}
+
+const OpenWeatherApiKey = process.env.OPEN_WEATHER;
+if (!OpenWeatherApiKey) {
+  throw new Error("Missing OPEN_WEATHER API key from .env vars");
+}
+
 export async function getRequests(db: Db): Promise<WeatherNotificationSubscription[]> {
     // todo check database for requests
     // todo support pagination or streaming
@@ -14,8 +24,7 @@ export async function getRequests(db: Db): Promise<WeatherNotificationSubscripti
   }
 
   export async function convertLocationToCoords (location: string): Promise<number[] | null> {
-    const apiKey = process.env.MAPBOX;
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${apiKey}`
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MapBoxApiKey}`
 
     try {
         const res = await fetch(url)
@@ -60,7 +69,6 @@ export function convertDegToCompass(deg: number): WindDirection {
 }
   
 export async function getWeather(location: string): Promise<Weather | null> {
-  const apiKey = process.env.OPEN_WEATHER;
   const coords = await convertLocationToCoords(location);
   
   if (!coords) {
@@ -69,7 +77,7 @@ export async function getWeather(location: string): Promise<Weather | null> {
   }
   const [lat, lon] = coords;
   
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OpenWeatherApiKey}&units=metric`
 
   try{
     const res = await fetch(url);
