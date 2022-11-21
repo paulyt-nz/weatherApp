@@ -2,8 +2,6 @@ import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weath
 import { type Db, MongoClient } from 'mongodb';
 import fetch from 'node-fetch';
 
-require("dotenv").config();
-
 const MapBoxApiKey = process.env.MAPBOX;
 if (!MapBoxApiKey) {
   throw new Error("Missing MAPBOX API key from .env vars");
@@ -28,8 +26,9 @@ export async function getRequests(db: Db): Promise<WeatherNotificationSubscripti
 
     try {
         const res = await fetch(url)
+        console.debug("res:  ", res)
         const data = await res.json()
-        console.debug(data)
+        console.debug("data:  ",data)
 
         const [lon, lat] : number[] = data.features[0].center
         console.debug('lat: ', lat, 'long: ', lon)

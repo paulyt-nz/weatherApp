@@ -1,10 +1,9 @@
+require("dotenv").config();
 import { setTimeout } from "timers/promises";
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
 import { Db, MongoClient } from 'mongodb';
 import { getRequests, getWeather, checkWeatherMatchesConstraints } from './weatherFunctions';
 import { createNotification, sendNotification, checkNotifiedToday } from './notificationFunctions';
-require("dotenv").config();
-
 
 
 async function connectToDB(): Promise<Db> {

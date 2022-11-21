@@ -3,4 +3,4 @@ require("dotenv").config();
 const MapBoxApiKey = process.env.MAPBOX;
 import { convertLocationToCoords } from './weatherFunctions';
 
-convertLocationToCoords('Plimmerton');
+convertLocationToCoords('Pukerua Bay');
