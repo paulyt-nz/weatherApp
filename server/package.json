@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Ensure you have mongodb running\r Copy .env.example to .env and ensure that the settings are correct\r run npm i\r run tsc (typescript compiler)\r run node index.js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,5 +19,6 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^18.7.11"
-  }
+  },
+  "keywords": []
 }

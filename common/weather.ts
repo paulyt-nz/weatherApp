@@ -1,4 +1,4 @@
-import {ObjectId} from 'mongodb';
+import type {ObjectId} from 'mongodb';
 
 export type WindDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
@@ -15,13 +15,15 @@ export type WeatherConstaint = {
 export type WeatherNotificationSubscription = {
     location: string;
 
+    coords: number[] | null;
+
     constraints: WeatherConstaint;
 
     email: string;
 
     notified_at: Date | null;
 
-    _id: ObjectId | null;
+    _id: ObjectId | undefined;
 };
 
 export type Weather = {

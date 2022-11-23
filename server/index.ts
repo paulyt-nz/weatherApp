@@ -45,11 +45,16 @@ app.post("/api/notificationSub", async (req, res) => {
     const db = client.db();
     // todo
     console.log(req.body);
-    const { location, constraints, email } = req.body;
+    const { location, constraints, email, coords } = req.body;
 
     // validate the request
     if (!location || typeof location !== "string") {
       res.status(400).send("Missing location");
+      return;
+    }
+
+    if (!coords) {
+      res.status(400).send("Missing coords");
       return;
     }
 
@@ -70,7 +75,10 @@ app.post("/api/notificationSub", async (req, res) => {
     const notificationRequest: WeatherNotificationSubscription = {
       email: email,
       location: location,
+      coords: coords,
       constraints: constraints,
+      notified_at: null,
+      _id: undefined,
     };
 
     // store it in the database in the subs collection
