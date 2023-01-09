@@ -4,13 +4,19 @@ import express from "express";
 
 import { client } from "./db/db";
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
-
+import fetch from 'node-fetch';
 
 const port = process.env.PORT ?? 3000;
+const MapBoxApiKey = process.env.MAPBOX;
+
+if (!MapBoxApiKey) {
+  throw new Error("Missing MAPBOX API key from .env vars");
+}
 
 const app = express();
 
 app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
 
 app.get("/api", (req, res) => {
   res.send("Welcome to the weather!");
@@ -37,6 +43,48 @@ function constraintsValid(constraints: Partial<WeatherConstaint>): boolean {
   }
   return true;
 }
+
+async function convertLocationToCoords (location: string): Promise<number[] | null> {
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MapBoxApiKey}`
+
+  console.debug(url)
+
+  try {
+      const res = await fetch(url)
+      console.debug("res:  ", res)
+      const data = await res.json() as any
+      console.debug("data:  ",data)
+
+      const [lon, lat] : number[] = data.features[0].center
+      console.debug('lat: ', lat, 'long: ', lon)
+
+      return Promise.resolve([lat, lon])
+  }
+  catch (err) {
+      console.error('ERROR', err)
+      return null
+  }
+}
+
+
+app.get("/api/coords", async (req, res) => {
+  console.debug('hitting /api/coords')
+  console.debug('req.query: ', req.query)
+  const location = req.query.location as string;
+  console.debug("location: ", location)
+  if (!location) {
+    res.status(400).send("Missing location");
+    return;
+  }
+
+  // try {
+  const coords = await convertLocationToCoords(location);
+  res.json(coords);
+  // }
+  // catch (err) {
+  //   res.status(400).send("Could not find location")
+  // }
+});
 
 app.post("/api/notificationSub", async (req, res) => {
   try {

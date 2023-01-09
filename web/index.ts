@@ -1,33 +1,6 @@
 import type { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
-// require("dotenv").config();
 
-console.log('index.js running')
 
-//const MapBoxApiKey = process.env.MAPBOX;
-const MapBoxApiKey = 'pk.eyJ1IjoicHVrZXJkIiwiYSI6ImNsNXU2MnJ5eTBmejUzZm51eWkxOHY0dmYifQ.9YanyzIX5CpaG5f4e9ZPLw';
-if (!MapBoxApiKey) {
-  throw new Error("Missing MAPBOX API key from .env vars");
-}
-
-export async function convertLocationToCoords (location: string): Promise<number[] | null> {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MapBoxApiKey}`
-  
-    try {
-        const res = await fetch(url)
-        console.debug("res:  ", res)
-        const data = await res.json()
-        console.debug("data:  ",data)
-  
-        const [lon, lat] : number[] = data.features[0].center
-        console.debug('lat: ', lat, 'long: ', lon)
-  
-        return Promise.resolve([lat, lon])
-    }
-    catch (err) {
-      console.error('ERROR', err)
-      return null
-    }
-  }
 
 const submitBtn = document.getElementById("submit") as HTMLButtonElement | null;
 if (!submitBtn) throw new Error("wtf");
@@ -48,7 +21,10 @@ submitBtn.addEventListener("click", async (event) => {
     return;
   }
 
-  const coords = await convertLocationToCoords(location.value)
+  const res = await fetch(`http://localhost:8080/api/coords?location=${location.value}`);
+  console.debug("location.value: ", location.value)
+  const coords = await res.json();
+  console.debug("coords: ", coords);
   if (!coords) {
       window.alert("Sorry could not find your location! Please try something else.")
       return
