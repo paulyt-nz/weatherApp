@@ -43,7 +43,10 @@ function constraintsValid(constraints: Partial<WeatherConstaint>): boolean {
 app.get("/api/coords", async (req, res) => {
   console.debug('hitting /api/coords')
   console.debug('req.query: ', req.query)
-  const location = req.query.location as string;
+  if (typeof req.query.location !== "string") {
+    throw new Error ("Location must exist and be a string")
+  }
+  const location = req.query.location;
   console.debug("location: ", location)
   if (!location) {
     res.status(400).send("Missing location");
