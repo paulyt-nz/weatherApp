@@ -22,6 +22,6 @@ export async function convertLocationToCoords (location: string): Promise<number
         return Promise.resolve([lat, lon])
     }
     catch (err) {
-        throw new Error (`Failed to retrieve coordinates for location: ${location}. Error: ${err}`);
+        return Promise.reject(new Error (`Failed to retrieve coordinates for location: ${location}. Error: ${err}`));
     }
   }

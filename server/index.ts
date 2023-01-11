@@ -44,7 +44,7 @@ app.get("/api/coords", async (req, res) => {
   console.debug('hitting /api/coords')
   console.debug('req.query: ', req.query)
   if (typeof req.query.location !== "string") {
-    throw new Error ("Location must exist and be a string")
+    throw new Error ("Location must be a string")
   }
   const location = req.query.location;
   console.debug("location: ", location)
@@ -53,13 +53,17 @@ app.get("/api/coords", async (req, res) => {
     return;
   }
 
-  // try {
-  const coords = await convertLocationToCoords(location);
-  res.json(coords);
-  // }
-  // catch (err) {
-  //   res.status(400).send("Could not find location")
-  // }
+  try {
+    const coords = await convertLocationToCoords(location);
+    res.json(coords);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error getting coords"
+    })
+  }
+  
 });
 
 app.post("/api/notificationSub", async (req, res) => {

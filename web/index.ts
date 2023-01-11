@@ -21,15 +21,21 @@ submitBtn.addEventListener("click", async (event) => {
     return;
   }
 
-  const res = await fetch(`http://localhost:8080/api/coords?location=${location.value}`);
-  console.debug("location.value: ", location.value)
+  //let res : Response
+  try {
+    var res = await fetch(`/api/coords?location=${location.value}`);
+    if (!res.ok) {
+      throw new Error("Could not find location!")
+    }
+    console.debug("location.value: ", location.value)
+  } catch (err) {
+    window.alert("Sorry could not find your location! Please try something else.")
+    console.debug(err)
+    return
+  }
   const coords = await res.json();
   console.debug("coords: ", coords);
-  if (!coords) {
-      window.alert("Sorry could not find your location! Please try something else.")
-      return
-  }
-  
+   
   const windDir = document.getElementById("windDirection") as HTMLSelectElement | null;
   if (!windDir || !windDir.selectedOptions) {
     window.alert('Missing Wind Direction')
