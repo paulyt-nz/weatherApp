@@ -15,13 +15,17 @@ export async function convertLocationToCoords (location: string): Promise<number
         console.debug("res:  ", res)
         const data = await res.json() as any
         console.debug("data:  ",data)
+
+        if (data.features.length === 0) {
+            throw new Error('No data returned')
+        }
   
         const [lon, lat] : number[] = data.features[0].center
         console.debug('lat: ', lat, 'long: ', lon)
   
-        return Promise.resolve([lat, lon])
+        return [lat, lon]
     }
     catch (err) {
-        return Promise.reject(new Error (`Failed to retrieve coordinates for location: ${location}. Error: ${err}`));
+        throw new Error(`Failed to retrieve coordinates for location: ${location}. Error: ${err}`);
     }
   }
