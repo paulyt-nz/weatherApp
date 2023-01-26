@@ -16,7 +16,7 @@ export async function convertLocationToCoords (location: string): Promise<number
         const data = await res.json() as any
         console.debug("data:  ",data)
 
-        if (data.features.length === 0) {
+        if (typeof data.features === undefined || data.features.length === 0) {
             throw new Error('No data returned')
         }
   
