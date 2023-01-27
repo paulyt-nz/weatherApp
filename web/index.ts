@@ -25,6 +25,10 @@ submitBtn.addEventListener("click", async (event) => {
   try {
     res = await fetch(`/api/coords?location=${location.value}`);
     console.debug("location.value: ", location.value)
+    if (!res.ok) { 
+      throw new Error("Could not find location!")
+    }
+
   } catch (err) {
     window.alert("Sorry could not find your location! Please try something else.")
     console.debug(err)

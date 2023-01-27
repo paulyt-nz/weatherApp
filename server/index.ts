@@ -43,17 +43,19 @@ function constraintsValid(constraints: Partial<WeatherConstaint>): boolean {
 app.get("/api/coords", async (req, res) => {
   console.debug('hitting /api/coords')
   console.debug('req.query: ', req.query)
-  if (typeof req.query.location !== "string") {
-    throw new Error ("Location must be a string")
-  }
-  const location = req.query.location;
-  console.debug("location: ", location)
-  if (!location) {
-    res.status(400).send("Missing location");
-    return;
-  }
 
   try {
+    if (typeof req.query.location !== "string") {
+      throw new Error ("Location must be a string")
+    }
+    const location = req.query.location;
+    console.debug("location: ", location)
+
+    if (!location) {
+      res.status(400).send("Missing location");
+      return;
+    }
+
     const coords = await convertLocationToCoords(location);
     res.json(coords);
   } catch (error) {
@@ -63,7 +65,6 @@ app.get("/api/coords", async (req, res) => {
       message: "Error getting coords"
     })
   }
-  
 });
 
 app.post("/api/notificationSub", async (req, res) => {
