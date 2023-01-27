@@ -1,4 +1,4 @@
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
+import type { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
 
 
 
@@ -21,6 +21,23 @@ submitBtn.addEventListener("click", async (event) => {
     return;
   }
 
+  let res: Response;
+  try {
+    res = await fetch(`/api/coords?location=${location.value}`);
+    console.debug("location.value: ", location.value)
+
+    if (!res.ok) { 
+      throw new Error("Could not find location!")
+    }
+
+  } catch (err) {
+    window.alert("Sorry could not find your location! Please try something else.")
+    console.debug(err)
+    return
+  }
+  const coords = await res.json();
+  console.debug("coords: ", coords);
+   
   const windDir = document.getElementById("windDirection") as HTMLSelectElement | null;
   if (!windDir || !windDir.selectedOptions) {
     window.alert('Missing Wind Direction')
@@ -71,6 +88,9 @@ submitBtn.addEventListener("click", async (event) => {
   const request: WeatherNotificationSubscription = {
     email: email.value,
     location: location.value,
+    coords: coords,
+    notified_at: null,
+    _id: undefined,
     constraints: {
       windDir: selectedWindDirs,
       windSpeed: {
@@ -84,8 +104,8 @@ submitBtn.addEventListener("click", async (event) => {
       humidity: {
         min: parseInt(humidityMin.value),
         max: parseInt(humidityMax.value)
-      }
-    }, // todo fill in the constraints
+      },
+    },
   };
 
   try {
