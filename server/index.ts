@@ -44,26 +44,24 @@ app.get("/api/coords", async (req, res) => {
   console.debug('hitting /api/coords')
   console.debug('req.query: ', req.query)
 
+  if (typeof req.query.location !== "string") {
+    res.status(400).send("invalid location parameter");
+    return;
+  }
+  const location = req.query.location;
+  console.debug("location: ", location)
+
+  if (!location) {
+    res.status(400).send("Missing location");
+    return;
+  }
+
   try {
-    if (typeof req.query.location !== "string") {
-      throw new Error ("Location must be a string")
-    }
-    const location = req.query.location;
-    console.debug("location: ", location)
-
-    if (!location) {
-      res.status(400).send("Missing location");
-      return;
-    }
-
     const coords = await convertLocationToCoords(location);
     res.json(coords);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Error getting coords"
-    })
+    res.status(500).send("Error getting coords")
   }
 });
 
