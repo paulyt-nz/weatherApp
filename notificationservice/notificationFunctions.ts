@@ -1,4 +1,11 @@
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
+import formData from 'form-data';
+import Mailgun from 'mailgun.js';
+
+const MailgunApiKey = process.env.MAILGUN;
+if (!MailgunApiKey) {
+  throw new Error("Missing MAILGUN API key from .env vars");
+}
 
 export function createNotification(
     weather: Weather,
@@ -9,7 +16,7 @@ export function createNotification(
     
     const { location } = request;
     
-    const { windSpeed, windDir, humidity, temperature } = request.constraints
+    const { windSpeed, windDir, humidity, temperature } = request.constraints;
     
     
     let notification = `Looks like the weather at ${location} is just what you were after!`
@@ -17,19 +24,26 @@ export function createNotification(
     return notification
   }
   
-export async function sendNotification(notification: string): Promise<void> {
-    // this is where you would send the email
-
-    // For now we will just print notification to the console so I can see it is working
-    console.log('******************************************')
-    console.log('******************************************')
-    console.log('******************************************')
-    console.log(notification)
-    console.log('******************************************')
-    console.log('******************************************')
-    console.log('******************************************')
-
-   // throw new Error("Function not implemented.");
+export async function sendNotification(notification: string, email: string): Promise<void> {
+    const DOMAIN = 'YOUR_DOMAIN_NAME';                        // change this to see if it makes any difference
+    
+    const mailgun = new Mailgun(formData);
+    const client = mailgun.client({username: 'WeatherApp', key: MailgunApiKey as string});
+    
+    const messageData = {
+      from: 'Excited User <me@samples.mailgun.org>',          // change this and see if it makes any difference
+      to: email,
+      subject: 'ITS LOOKING GOOD OUT THERE!',
+      text: notification
+    };
+    
+    client.messages.create(DOMAIN, messageData)
+     .then((res) => {
+       console.log(res);
+     })
+     .catch((err) => {
+      throw new Error("Email not sent: ", err);
+     });
   }
 
   export function checkNotifiedToday(request: WeatherNotificationSubscription): boolean {
