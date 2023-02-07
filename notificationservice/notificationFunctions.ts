@@ -25,14 +25,14 @@ export function createNotification(
   }
   
 export async function sendNotification(notification: string, email: string): Promise<void> {
-    const DOMAIN = 'YOUR_DOMAIN_NAME';                        // change this to see if it makes any difference
+    const DOMAIN = 'sandboxe36587c9c93041f1b8403bd203e6b18c.mailgun.org';                        // domain needs to be verified in the mailgun control panel
     
     const mailgun = new Mailgun(formData);
     const client = mailgun.client({username: 'WeatherApp', key: MailgunApiKey as string});
     
     const messageData = {
-      from: 'Excited User <me@samples.mailgun.org>',          // change this and see if it makes any difference
-      to: email,
+      from: 'postmaster@sandboxe36587c9c93041f1b8403bd203e6b18c.mailgun.org',           // from email needs to be verified in the mailgun control panel
+      to: email,                                                                        // can only send to p.d.thornton995 at this stage
       subject: 'ITS LOOKING GOOD OUT THERE!',
       text: notification
     };
