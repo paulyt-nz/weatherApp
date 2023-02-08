@@ -37,13 +37,13 @@ export async function sendNotification(notification: string, email: string): Pro
       text: notification
     };
     
-    client.messages.create(DOMAIN, messageData)
-     .then((res) => {
-       console.log(res);
-     })
-     .catch((err) => {
+    try {
+      const res = await client.messages.create(DOMAIN, messageData);
+      console.log(res);
+      return Promise.resolve();
+    } catch (err : any) {
       throw new Error("Email not sent: ", err);
-     });
+    }
   }
 
   export function checkNotifiedToday(request: WeatherNotificationSubscription): boolean {
