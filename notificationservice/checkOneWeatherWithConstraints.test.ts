@@ -1,5 +1,7 @@
+require('dotenv').config();
 import { checkOneWeatherWithConstraints } from './weatherFunctions'
 import { expect, jest, test } from '@jest/globals';
+
 
 test("test if weather value is within the constraint range", () =>{
     //Arrange - get the data together for testing

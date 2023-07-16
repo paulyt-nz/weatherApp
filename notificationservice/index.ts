@@ -8,6 +8,7 @@ import { createNotification, sendNotification, checkNotifiedToday } from './noti
 
 async function connectToDB(): Promise<Db> {
   const uri = process.env.MONGO_DB;
+  console.log("uri:", uri)
   if (!uri) throw new Error("Missing MONGO_DB connection string from .env vars");
 
   const client = new MongoClient(uri);

@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { convertLocationToCoords } from './weatherFunctions';
 import { expect, jest, test } from '@jest/globals';
 
