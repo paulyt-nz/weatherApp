@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 import express from "express";
-
+import  cors  from "cors";
 import { client } from "./db/db";
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
 import { convertLocationToCoords } from "./location";
@@ -11,6 +11,7 @@ const port = process.env.PORT ?? 3000;
 const app = express();
 
 app.use(express.json());
+app.use(cors())
 //app.use(express.urlencoded({ extended: false }));
 
 app.get("/api", (req, res) => {
@@ -57,7 +58,9 @@ app.get("/api/coords", async (req, res) => {
   }
 
   try {
+    console.log('calling convertLocationToCoords')
     const coords = await convertLocationToCoords(location);
+    console.log(coords)
     res.json(coords);
   } catch (error) {
     console.error(error);

@@ -3,18 +3,151 @@
 import { useState } from "react"
 import Footer from "../Footer"
 import Navbar from "../Navbar"
+import axios from "axios"
+
+import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weather'
+
+
+export async function sendRequest(request : WeatherNotificationSubscription) {
+  console.log("sending request: ", request)
+  try {
+    const response = await fetch("http://localhost:8081/api/notificationSub", {
+      body: JSON.stringify(request),
+      method: "POST",
+      headers: {
+        "content-type": "application/JSON"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    window.alert("Congrats you are now subscribed!");
+  } catch (error) {
+    console.error(error);
+    window.alert((error as any)?.message);
+  }
+}
+
+export async function getCoordsFromLocation(location: string) : Promise<number[]> {
+  console.log('getting coords from location')
+  try {   
+    const res = await axios.get(`http://localhost:8081/api/coords?location=${encodeURIComponent(location)}`);
+    const coords = res.data;
+    return coords;
+    } 
+  catch (err) {
+    window.alert("Sorry could not find your location! Please try something else.")
+    console.debug(err)
+    throw new Error("Could not find location!");
+  }
+}
+
+export function checkUserData(request : WeatherNotificationSubscription) {
+  if (!request.email || request.email === "") { 
+    window.alert("Missing email address!") 
+    return;
+  }
+  if (!request.location || request.location === "") { 
+    window.alert("Missing location!") 
+    return;
+  }
+  if (!request.coords || request.coords.length !== 2) {  
+    window.alert("Location not found!") 
+    return;
+  }
+}
+
+function checkConstraints(request : WeatherNotificationSubscription) {
+  // validate contraint data here
+  //    - make sure that min < max for all of them
+  //    - make sure that at least one type of constraint is present
+}
+
+
 
 export default function MainApp() {
 
-
-  const [ showWindDirection, setShowWindDirection ] = useState(true);
+  const [ showWindDir, setShowWindDir ] = useState(true);
   const [ showWindSpeed, setShowWindSpeed ] = useState(true);
   const [ showTemp, setShowTemp ] = useState(true);
-  const [ showHumidity, setShowHumidity ] = useState(false);
+  const [ showHumidity, setShowHumidity ] = useState(true);
 
+  const [ emailInput, setEmailInput ] = useState("");
+  const [ locationInput, setLocationInput ] = useState("");
+  const [ windDirInput, setWindDirInput ] = useState<WindDirection[]>([]);
+  const [ windSpeedMinInput, setWindSpeedMinInput ] = useState("");
+  const [ windSpeedMaxInput, setWindSpeedMaxInput ] = useState("");
+  const [ tempMinInput, setTempMinInput ] = useState("");
+  const [ tempMaxInput, setTempMaxInput ] = useState("");
+  const [ humidityMinInput, setHumidityMinInput ] = useState("");
+  const [ humidityMaxInput, setHumidityMaxInput ] = useState("");
+
+
+  function handleWindDirInput(e: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
+    setWindDirInput(selectedOptions as WindDirection[]);
+  }
+
+  function clearInputs() {
+    setEmailInput("");
+    setLocationInput("");
+    setWindDirInput([]);
+    setWindSpeedMinInput("");
+    setWindSpeedMaxInput("");
+    setTempMinInput("");
+    setTempMaxInput("");
+    setHumidityMinInput("");
+    setHumidityMaxInput("");
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    let coords : number[];
+    try {
+      coords = await getCoordsFromLocation(locationInput)
+   
+      const request : WeatherNotificationSubscription  = {
+        email: emailInput,
+        location: locationInput,
+        coords: coords,
+        notified_at: null,
+        _id: undefined,
+        constraints: {
+          windDir: windDirInput,
+          windSpeed: { 
+            min: Number(windSpeedMinInput), 
+            max: Number(windSpeedMaxInput) 
+          },
+          temperature: { 
+            min: Number(tempMinInput), 
+            max: Number(tempMaxInput) 
+          },
+          humidity: { 
+            min: Number(humidityMinInput), 
+            max: Number(humidityMaxInput) 
+          }
+        }
+      }
+
+      console.log(request)
+
+      checkUserData(request);
+      checkConstraints(request);
+      await sendRequest(request);
+      clearInputs();
+    } 
+    catch (err) {
+      console.debug(err)
+      // make a nice error handling message here
+    }
+  }
   
+
   return (
-    <main className="">
+    <div className="">
         <Navbar />
 
         <h1>THIS WILL BE THE MAIN APP</h1>
@@ -27,7 +160,7 @@ export default function MainApp() {
               <legend>Choose your parameters</legend>
 
               <div>
-                <input type="checkbox" id="windDirectionCheckbox" name="windDirectionCheckbox" checked={showWindDirection} onChange={() => setShowWindDirection(!showWindDirection)} />
+                <input type="checkbox" id="windDirectionCheckbox" name="windDirectionCheckbox" checked={showWindDir} onChange={() => setShowWindDir(!showWindDir)} />
                 <label htmlFor="windDirectionCheckbox">Wind Direction</label>
               </div>
 
@@ -49,21 +182,21 @@ export default function MainApp() {
             </fieldset>
           </div>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="">
-              <label className="" htmlFor="email">Email Address</label>F
-              <input className="" type="email" id="email" name="email" />
+              <label className="" htmlFor="email">Email Address</label>
+              <input className="" type="email" id="email" name="email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} />
             </div>
 
             <div className="">
               <label className="" htmlFor="location">Location</label>
-              <input className="" type="text" id="location" name="location" />
+              <input className="" type="text" id="location" name="location" value={locationInput} onChange={(e) => setLocationInput(e.target.value)} />
             </div>
 
-            {showWindDirection && (
+            {showWindDir && (
             <div className="">
-              <label className="" htmlFor="windDirection">Wind Direction</label>
-              <select className="" name="windDirection" id="windDirection" multiple>
+              <label className="" htmlFor="windDir">Wind Direction</label>
+              <select className="" name="windDirection" id="windDir" multiple value={windDirInput} onChange={handleWindDirInput}>
                 <option value="N">North</option>
                 <option value="NE">NE</option>
                 <option value="E">E</option>
@@ -79,30 +212,30 @@ export default function MainApp() {
             <div className="">
               <p>Wind Speed</p>
               <label className="" htmlFor="windSpeedMin">from</label>
-              <input className="" type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100" placeholder="0kph" />
+              <input className="" type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100" placeholder="0kph" value={windSpeedMinInput} onChange={(e) => setWindSpeedMinInput(e.target.value)}/>
              
               <label className="" htmlFor="windSpeedMax">to</label>
-              <input className="" type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50kph" />
+              <input className="" type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50kph" value={windSpeedMaxInput} onChange={(e) => setWindSpeedMaxInput(e.target.value)}/>
             </div>)}
 
             {showTemp && (
             <div className="">
               <p>Temperature</p>
               <label className="" htmlFor="tempMin">from</label>
-              <input className="" type="number" id="tempMin" name="tempMin" min="-10" max="45" placeholder="-10°C" />
+              <input className="" type="number" id="tempMin" name="tempMin" min="-10" max="45" placeholder="-10°C" value={tempMinInput} onChange={(e) => setTempMinInput(e.target.value)}/>
              
               <label className="" htmlFor="tempMax">to</label>
-              <input className="" type="number" id="tempMax" name="tempMax" min="-10" max="45" placeholder="45°C" />
+              <input className="" type="number" id="tempMax" name="tempMax" min="-10" max="45" placeholder="45°C" value={tempMaxInput} onChange={(e) => setTempMaxInput(e.target.value)}/>
             </div>)}
 
             {showHumidity && (
-            <div className="mb-3">
+            <div className="">
               <p>Humidity</p>
               <label className="" htmlFor="humidityMin">from</label>
-              <input className="" type="number" id="humidityMin" name="humidityMin" min="10" max="100" placeholder="10%" />
+              <input className="" type="number" id="humidityMin" name="humidityMin" min="10" max="100" placeholder="10%" value={humidityMinInput} onChange={(e) => setHumidityMinInput(e.target.value)}/>
               
               <label className="" htmlFor="humidityMax">to</label>
-              <input className="" type="number" id="humidityMax" name="humidityMax" min="10" max="100" placeholder="100%" />
+              <input className="" type="number" id="humidityMax" name="humidityMax" min="10" max="100" placeholder="100%" value={humidityMaxInput} onChange={(e) => setHumidityMaxInput(e.target.value)}/>
             </div>)}
 
             <div className="">
@@ -113,6 +246,6 @@ export default function MainApp() {
         </div>
   
         <Footer />
-    </main>
+    </div>
   )
-} // export default function Home()
+}

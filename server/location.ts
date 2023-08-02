@@ -12,18 +12,18 @@ export async function convertLocationToCoords (location: string): Promise<number
   
     try {
         const res = await fetch(url)
-        console.debug("res:  ", res)
         const data = await res.json() as any
-        console.debug("data:  ",data)
 
         if (!data?.features?.length) {       
             throw new Error('No data returned')
         }
   
         const [lon, lat] : number[] = data.features[0].center
-        console.debug('lat: ', lat, 'long: ', lon)
+
+        const roundedLon = Number(lon.toFixed(3));
+        const roundedLat = Number(lat.toFixed(3));
   
-        return [lat, lon]
+        return [roundedLat, roundedLon]
     }
     catch (err) {
         throw new Error(`Failed to retrieve coordinates for location: ${location}. Error: ${err}`);

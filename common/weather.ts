@@ -3,7 +3,7 @@ import type {ObjectId} from 'mongodb';
 export type WindDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
 export type WeatherConstaint = {
-    windDir: WindDirection[];
+    windDir?: WindDirection[];
 
     windSpeed?: { min?: number; max?: number };
 
