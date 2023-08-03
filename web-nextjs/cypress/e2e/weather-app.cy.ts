@@ -1,25 +1,23 @@
 import { WeatherNotificationSubscription } from "../../../common/weather";
 
 describe('Weather App', () => {
+  describe('/app', () => {
 
-  beforeEach(() => {
-    cy.visit('http://localhost:3000/app') // Assuming the form is on the home page.
+    beforeEach(() => {
+      cy.visit('http://localhost:3000/app')
 
-    cy.intercept('POST', 'http://localhost:8081/api/notificationSub', {
-      statusCode: 200,
-      body: 'it worked!'
-    }).as('postSubscription')
+      cy.intercept('POST', 'http://localhost:8081/api/notificationSub', {
+        statusCode: 200,
+        body: 'it worked!'
+      }).as('postSubscription')
 
-    cy.intercept('GET', 'http://localhost:8081/api/coords*', {
-      statusCode: 200,
-      body: [-41.037, 174.885]
-    }).as('getCoords')
-  })
+      cy.intercept('GET', 'http://localhost:8081/api/coords*', {
+        statusCode: 200,
+        body: [-41.037, 174.885]
+      }).as('getCoords')
+    })
 
     it('should submit a valid form', () => {
-
-        //cy.visit('http://localhost:3000/app')
-
         cy.get('#email').type('hello@paulyt')
         cy.get('#location').type('Pukerua Bay')
 
@@ -37,7 +35,8 @@ describe('Weather App', () => {
           .then((interception) => {
             if (interception && interception.response) {
                 assert.equal(interception.response.statusCode, 200);
-            } else {
+            } 
+            else {
                 assert.fail("Interception or response was undefined");
             } 
           
@@ -66,9 +65,23 @@ describe('Weather App', () => {
                     max: 20 
                   } 
               });
-            } else {
+            } 
+            else {
                 assert.fail("Interception or request was undefined");
             }
         })
     })
+  });
+
+  describe('/', () => {
+    it('should navigate to the about page when enter is clicked', () => {
+      cy.visit('http://localhost:3000/')
+   
+      cy.get('#enter').click()
+  
+      cy.url().should('include', '/app')
+
+      cy.get('h1').contains('THIS WILL BE THE MAIN APP')
+    })
+  });
 });

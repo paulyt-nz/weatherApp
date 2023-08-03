@@ -36,7 +36,7 @@ export async function getCoordsFromLocation(location: string) : Promise<number[]
     const res = await axios.get(`http://localhost:8081/api/coords?location=${encodeURIComponent(location)}`);
     const coords = res.data;
     return coords;
-    } 
+  } 
   catch (err) {
     window.alert("Sorry could not find your location! Please try something else.")
     console.debug(err)

@@ -9,7 +9,7 @@ export default function Home() {
 
       <div>
         <h1>THIS WILL BE MY LANDING/HOME PAGE</h1>
-        <Link href="/app">Enter App</Link>
+        <Link id="enter" href="/app">Enter App</Link>
         <p></p>
       </div>
 
