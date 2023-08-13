@@ -59,20 +59,51 @@ export function checkUserData(request : WeatherNotificationSubscription) {
   }
 }
 
+
+
 function checkConstraints(request : WeatherNotificationSubscription) {
   // validate contraint data here
   //    - make sure that min < max for all of them
   //    - make sure that at least one type of constraint is present
 }
 
+interface ShownContraints {
+  showWindDir: boolean,
+  showWindSpeed: boolean,
+  showTemp: boolean,
+  showHumidity: boolean
+}
+
+interface InputContraints {
+  emailInput: string,
+  locationInput: string,
+  windDirInput: WindDirection[],
+  windSpeedMinInput: string,
+  windSpeedMaxInput: string,
+  tempMinInput: string,
+  tempMaxInput: string,
+  humidityMinInput: string,
+  humidityMaxInput: string
+}
 
 
 export default function MainApp() {
 
-  const [ showWindDir, setShowWindDir ] = useState(true);
-  const [ showWindSpeed, setShowWindSpeed ] = useState(true);
-  const [ showTemp, setShowTemp ] = useState(true);
-  const [ showHumidity, setShowHumidity ] = useState(true);
+  const initialShownConstraints : ShownContraints = {
+    showWindDir: true,
+    showWindSpeed: true,
+    showTemp: true,
+    showHumidity: true
+  }
+
+  const [ shownConstraints, setShownConstraints ] = useState<ShownContraints>(initialShownConstraints);
+
+  function handleCheckboxChange(checkbox: keyof ShownContraints) {
+    setShownConstraints(prevState => ({
+      ...prevState,
+      [checkbox]: !prevState[checkbox]
+    }));
+  };
 
   const [ emailInput, setEmailInput ] = useState("");
   const [ locationInput, setLocationInput ] = useState("");
@@ -160,22 +191,22 @@ export default function MainApp() {
               <legend>Choose your parameters</legend>
 
               <div>
-                <input type="checkbox" id="windDirectionCheckbox" name="windDirectionCheckbox" checked={showWindDir} onChange={() => setShowWindDir(!showWindDir)} />
+                <input type="checkbox" id="windDirectionCheckbox" name="windDirectionCheckbox" checked={shownConstraints.showWindDir} onChange={() => handleCheckboxChange('showWindDir')}  />
                 <label htmlFor="windDirectionCheckbox">Wind Direction</label>
               </div>
 
               <div>
-                <input type="checkbox" id="windSpeedCheckBox" name="windSpeedCheckBox" checked={showWindSpeed} onChange={() => setShowWindSpeed(!showWindSpeed)} />
+                <input type="checkbox" id="windSpeedCheckBox" name="windSpeedCheckBox" checked={shownConstraints.showWindSpeed} onChange={() => handleCheckboxChange('showWindSpeed')} />
                 <label htmlFor="windSpeedCheckBox">Wind Speed</label>
               </div>
 
               <div>
-                <input type="checkbox" id="tempCheckbox" name="tempCheckbox" checked={showTemp} onChange={() => setShowTemp(!showTemp)} />
+                <input type="checkbox" id="tempCheckbox" name="tempCheckbox" checked={shownConstraints.showTemp} onChange={() => handleCheckboxChange('showTemp')}  />
                 <label htmlFor="tempCheckbox">Temperature</label>
               </div>
 
               <div>
-                <input type="checkbox" id="humidityCheckbox" name="humidityCheckbox" checked={showHumidity} onChange={() => setShowHumidity(!showHumidity)}/>
+                <input type="checkbox" id="humidityCheckbox" name="humidityCheckbox" checked={shownConstraints.showHumidity} onChange={() => handleCheckboxChange('showHumidity')} />
                 <label htmlFor="humidityCheckbox">Humidity</label>
               </div>
 
@@ -193,7 +224,7 @@ export default function MainApp() {
               <input className="" type="text" id="location" name="location" value={locationInput} onChange={(e) => setLocationInput(e.target.value)} />
             </div>
 
-            {showWindDir && (
+            {shownConstraints.showWindDir && (
             <div className="">
               <label className="" htmlFor="windDir">Wind Direction</label>
               <select className="" name="windDirection" id="windDir" multiple value={windDirInput} onChange={handleWindDirInput}>
@@ -208,7 +239,7 @@ export default function MainApp() {
               </select>
             </div>)}
 
-            {showWindSpeed && (  
+            {shownConstraints.showWindSpeed && (  
             <div className="">
               <p>Wind Speed</p>
               <label className="" htmlFor="windSpeedMin">from</label>
@@ -218,7 +249,7 @@ export default function MainApp() {
               <input className="" type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50kph" value={windSpeedMaxInput} onChange={(e) => setWindSpeedMaxInput(e.target.value)}/>
             </div>)}
 
-            {showTemp && (
+            {shownConstraints.showTemp && (
             <div className="">
               <p>Temperature</p>
               <label className="" htmlFor="tempMin">from</label>
@@ -228,7 +259,7 @@ export default function MainApp() {
               <input className="" type="number" id="tempMax" name="tempMax" min="-10" max="45" placeholder="45°C" value={tempMaxInput} onChange={(e) => setTempMaxInput(e.target.value)}/>
             </div>)}
 
-            {showHumidity && (
+            {shownConstraints.showHumidity && (
             <div className="">
               <p>Humidity</p>
               <label className="" htmlFor="humidityMin">from</label>
