@@ -7,6 +7,11 @@ if (!MailgunApiKey) {
   throw new Error("Missing MAILGUN API key from .env vars");
 }
 
+const MailgunDomain = process.env.MAILGUN_DOMAIN;     // domain needs to be verified in the mailgun control panel
+if (!MailgunDomain) {
+  throw new Error("Missing MAILGUN DOMAIN from .env vars");
+} 
+
 export function createNotification(
     weather: Weather,
     request: WeatherNotificationSubscription
@@ -22,31 +27,33 @@ export function createNotification(
     let notification = `Looks like the weather at ${location} is just what you were after!`
   
     return notification
-  }
+}
   
 export async function sendNotification(notification: string, email: string): Promise<void> {
-    const DOMAIN = 'sandboxe36587c9c93041f1b8403bd203e6b18c.mailgun.org';                        // domain needs to be verified in the mailgun control panel
-    
+       
     const mailgun = new Mailgun(formData);
     const client = mailgun.client({username: 'WeatherApp', key: MailgunApiKey as string});
     
     const messageData = {
-      from: 'postmaster@sandboxe36587c9c93041f1b8403bd203e6b18c.mailgun.org',           // from email needs to be verified in the mailgun control panel
-      to: email,                                                                        // can only send to p.d.thornton995 at this stage
+      from: `postmaster@${MailgunDomain as string}`,                // from email needs to be verified in the mailgun control panel
+      to: email,                                          // can only send to p.d.thornton995 at this stage
       subject: 'ITS LOOKING GOOD OUT THERE!',
       text: notification
     };
     
+    console.debug(messageData)
+    console.debug(MailgunDomain)
+
     try {
-      const res = await client.messages.create(DOMAIN, messageData);
+      const res = await client.messages.create(MailgunDomain as string, messageData);
       console.log(res);
-      return Promise.resolve();
+      return;
     } catch (err : any) {
       throw new Error("Email not sent: ", err);
     }
-  }
+}
 
-  export function checkNotifiedToday(request: WeatherNotificationSubscription): boolean {
+export function checkNotifiedToday(request: WeatherNotificationSubscription): boolean {
     if (request.notified_at) {
       const time24HoursAgo = Date.now() - 24 * 60 * 60 * 1000 
       const timeNotified = request.notified_at.getTime()
@@ -56,4 +63,4 @@ export async function sendNotification(notification: string, email: string): Pro
       } 
     }
     return false
-  }
+}

@@ -50,9 +50,11 @@ async function poll(db: Db) {
       }
 
       if (checkWeatherMatchesConstraints(request.constraints, weather)) {
+
         const notification = createNotification(weather, request);
         console.debug(`Sending: ${notification}`)
         await sendNotification(notification, request.email);
+
         // update notified_at in db
         let timeNotified = new Date()
         await db.collection('subs').updateOne({_id: request._id}, { $set: {notified_at : timeNotified}})
