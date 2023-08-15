@@ -98,39 +98,40 @@ export default function MainApp() {
 
   const [ shownConstraints, setShownConstraints ] = useState<ShownContraints>(initialShownConstraints);
 
-  function handleCheckboxChange(checkbox: keyof ShownContraints) {
+  function handleCheckboxChange(currentCheckbox: keyof ShownContraints) {
     setShownConstraints(prevState => ({
       ...prevState,
-      [checkbox]: !prevState[checkbox]
+      [currentCheckbox]: !prevState[currentCheckbox]
     }));
   };
 
-  const [ emailInput, setEmailInput ] = useState("");
-  const [ locationInput, setLocationInput ] = useState("");
-  const [ windDirInput, setWindDirInput ] = useState<WindDirection[]>([]);
-  const [ windSpeedMinInput, setWindSpeedMinInput ] = useState("");
-  const [ windSpeedMaxInput, setWindSpeedMaxInput ] = useState("");
-  const [ tempMinInput, setTempMinInput ] = useState("");
-  const [ tempMaxInput, setTempMaxInput ] = useState("");
-  const [ humidityMinInput, setHumidityMinInput ] = useState("");
-  const [ humidityMaxInput, setHumidityMaxInput ] = useState("");
+  const inititialInputConstraints: InputContraints = {
+    emailInput: "",
+    locationInput: "",
+    windDirInput: [],
+    windSpeedMinInput: "",
+    windSpeedMaxInput: "",
+    tempMinInput: "",
+    tempMaxInput: "",
+    humidityMinInput: "",
+    humidityMaxInput: ""
+  }
 
+  const [ inputConstraints, setInputConstraints ] = useState<InputContraints>(inititialInputConstraints);
+
+  function handleInputChange(currentInput: keyof InputContraints, value: string) {
+    setInputConstraints(prevState => ({
+      ...prevState,
+      [currentInput]: value
+    }));
+  }
 
   function handleWindDirInput(e: React.ChangeEvent<HTMLSelectElement>) {
     const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
-    setWindDirInput(selectedOptions as WindDirection[]);
-  }
-
-  function clearInputs() {
-    setEmailInput("");
-    setLocationInput("");
-    setWindDirInput([]);
-    setWindSpeedMinInput("");
-    setWindSpeedMaxInput("");
-    setTempMinInput("");
-    setTempMaxInput("");
-    setHumidityMinInput("");
-    setHumidityMaxInput("");
+    setInputConstraints(prevState => ({
+      ...prevState,
+      winDirInput: selectedOptions as WindDirection[]
+    }));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -138,27 +139,27 @@ export default function MainApp() {
 
     let coords : number[];
     try {
-      coords = await getCoordsFromLocation(locationInput)
+      coords = await getCoordsFromLocation(inputConstraints.locationInput)
    
       const request : WeatherNotificationSubscription  = {
-        email: emailInput,
-        location: locationInput,
+        email: inputConstraints.emailInput,
+        location: inputConstraints.locationInput,
         coords: coords,
         notified_at: null,
         _id: undefined,
         constraints: {
-          windDir: windDirInput,
+          windDir: inputConstraints.windDirInput,
           windSpeed: { 
-            min: Number(windSpeedMinInput), 
-            max: Number(windSpeedMaxInput) 
+            min: Number(inputConstraints.windSpeedMinInput), 
+            max: Number(inputConstraints.windSpeedMaxInput) 
           },
           temperature: { 
-            min: Number(tempMinInput), 
-            max: Number(tempMaxInput) 
+            min: Number(inputConstraints.tempMinInput), 
+            max: Number(inputConstraints.tempMaxInput) 
           },
           humidity: { 
-            min: Number(humidityMinInput), 
-            max: Number(humidityMaxInput) 
+            min: Number(inputConstraints.humidityMinInput), 
+            max: Number(inputConstraints.humidityMaxInput) 
           }
         }
       }
@@ -168,7 +169,7 @@ export default function MainApp() {
       checkUserData(request);
       checkConstraints(request);
       await sendRequest(request);
-      clearInputs();
+      setInputConstraints(inititialInputConstraints);
     } 
     catch (err) {
       console.debug(err)
@@ -216,18 +217,18 @@ export default function MainApp() {
           <form onSubmit={handleSubmit}>
             <div className="">
               <label className="" htmlFor="email">Email Address</label>
-              <input className="" type="email" id="email" name="email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} />
+              <input className="" type="email" id="email" name="email" value={inputConstraints.emailInput} onChange={(e) => handleInputChange("emailInput", e.target.value)} />
             </div>
 
             <div className="">
               <label className="" htmlFor="location">Location</label>
-              <input className="" type="text" id="location" name="location" value={locationInput} onChange={(e) => setLocationInput(e.target.value)} />
+              <input className="" type="text" id="location" name="location" value={inputConstraints.locationInput} onChange={(e) => handleInputChange("locationInput", e.target.value)} />
             </div>
 
             {shownConstraints.showWindDir && (
             <div className="">
               <label className="" htmlFor="windDir">Wind Direction</label>
-              <select className="" name="windDirection" id="windDir" multiple value={windDirInput} onChange={handleWindDirInput}>
+              <select className="" name="windDirection" id="windDir" multiple value={inputConstraints.windDirInput} onChange={handleWindDirInput}>
                 <option value="N">North</option>
                 <option value="NE">NE</option>
                 <option value="E">E</option>
@@ -243,30 +244,30 @@ export default function MainApp() {
             <div className="">
               <p>Wind Speed</p>
               <label className="" htmlFor="windSpeedMin">from</label>
-              <input className="" type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100" placeholder="0kph" value={windSpeedMinInput} onChange={(e) => setWindSpeedMinInput(e.target.value)}/>
+              <input className="" type="number" id="windSpeedMin" name="windSpeedMin" min="0" max="100" placeholder="0kph" value={inputConstraints.windSpeedMinInput} onChange={(e) => handleInputChange("windSpeedMinInput", e.target.value)}/>
              
               <label className="" htmlFor="windSpeedMax">to</label>
-              <input className="" type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50kph" value={windSpeedMaxInput} onChange={(e) => setWindSpeedMaxInput(e.target.value)}/>
+              <input className="" type="number" id="windSpeedMax" name="windSpeedMax" min="0" max="100" placeholder="50kph" value={inputConstraints.windSpeedMaxInput} onChange={(e) => handleInputChange("windSpeedMaxInput", e.target.value)}/>
             </div>)}
 
             {shownConstraints.showTemp && (
             <div className="">
               <p>Temperature</p>
               <label className="" htmlFor="tempMin">from</label>
-              <input className="" type="number" id="tempMin" name="tempMin" min="-10" max="45" placeholder="-10°C" value={tempMinInput} onChange={(e) => setTempMinInput(e.target.value)}/>
+              <input className="" type="number" id="tempMin" name="tempMin" min="-10" max="45" placeholder="-10°C" value={inputConstraints.tempMinInput} onChange={(e) => handleInputChange("tempMinInput", e.target.value)}/>
              
               <label className="" htmlFor="tempMax">to</label>
-              <input className="" type="number" id="tempMax" name="tempMax" min="-10" max="45" placeholder="45°C" value={tempMaxInput} onChange={(e) => setTempMaxInput(e.target.value)}/>
+              <input className="" type="number" id="tempMax" name="tempMax" min="-10" max="45" placeholder="45°C" value={inputConstraints.tempMaxInput} onChange={(e) => handleInputChange("tempMaxInput", e.target.value)}/>
             </div>)}
 
             {shownConstraints.showHumidity && (
             <div className="">
               <p>Humidity</p>
               <label className="" htmlFor="humidityMin">from</label>
-              <input className="" type="number" id="humidityMin" name="humidityMin" min="10" max="100" placeholder="10%" value={humidityMinInput} onChange={(e) => setHumidityMinInput(e.target.value)}/>
+              <input className="" type="number" id="humidityMin" name="humidityMin" min="10" max="100" placeholder="10%" value={inputConstraints.humidityMinInput} onChange={(e) => handleInputChange("humidityMinInput", e.target.value)}/>
               
               <label className="" htmlFor="humidityMax">to</label>
-              <input className="" type="number" id="humidityMax" name="humidityMax" min="10" max="100" placeholder="100%" value={humidityMaxInput} onChange={(e) => setHumidityMaxInput(e.target.value)}/>
+              <input className="" type="number" id="humidityMax" name="humidityMax" min="10" max="100" placeholder="100%" value={inputConstraints.humidityMaxInput} onChange={(e) => handleInputChange("humidityMaxInput", e.target.value)}/>
             </div>)}
 
             <div className="">
