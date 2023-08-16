@@ -96,15 +96,6 @@ export default function MainApp() {
     showHumidity: true
   }
 
-  const [ shownConstraints, setShownConstraints ] = useState<ShownContraints>(initialShownConstraints);
-
-  function handleCheckboxChange(currentCheckbox: keyof ShownContraints) {
-    setShownConstraints(prevState => ({
-      ...prevState,
-      [currentCheckbox]: !prevState[currentCheckbox]
-    }));
-  };
-
   const inititialInputConstraints: InputContraints = {
     emailInput: "",
     locationInput: "",
@@ -117,7 +108,15 @@ export default function MainApp() {
     humidityMaxInput: ""
   }
 
+  const [ shownConstraints, setShownConstraints ] = useState<ShownContraints>(initialShownConstraints);
   const [ inputConstraints, setInputConstraints ] = useState<InputContraints>(inititialInputConstraints);
+
+  function handleCheckboxChange(currentCheckbox: keyof ShownContraints) {
+    setShownConstraints(prevState => ({
+      ...prevState,
+      [currentCheckbox]: !prevState[currentCheckbox]
+    }));
+  };
 
   function handleInputChange(currentInput: keyof InputContraints, value: string) {
     setInputConstraints(prevState => ({
@@ -130,7 +129,7 @@ export default function MainApp() {
     const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
     setInputConstraints(prevState => ({
       ...prevState,
-      winDirInput: selectedOptions as WindDirection[]
+      windDirInput: selectedOptions as WindDirection[]
     }));
   }
 
