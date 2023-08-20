@@ -50,21 +50,11 @@ describe('Weather App', () => {
               assert.equal(request.notified_at, null);
               assert.equal(request._id, undefined);
 
-              assert.deepEqual(request.constraints, {
-                  windDir: ['N'],
-                  windSpeed: { 
-                    min: 10, 
-                    max: 20 
-                  },
-                  temperature: {
-                    min: 10, 
-                    max: 20 
-                  },
-                  humidity: { 
-                    min: 10, 
-                    max: 20 
-                  } 
-              });
+              assert.deepEqual(request.constraints.windDir, ['N']);
+              assert.deepEqual(request.constraints.windSpeed, { min: 10, max: 20 });
+              assert.deepEqual(request.constraints.temperature, { min: 10, max: 20 });
+              assert.deepEqual(request.constraints.humidity, { min: 10, max: 20 });
+
             } 
             else {
                 assert.fail("Interception or request was undefined");
@@ -74,7 +64,7 @@ describe('Weather App', () => {
   });
 
   describe('/', () => {
-    it('should navigate to the about page when enter is clicked', () => {
+    it('should navigate to the main app page when enter is clicked', () => {
       cy.visit('http://localhost:3000/')
    
       cy.get('#enter').click()
