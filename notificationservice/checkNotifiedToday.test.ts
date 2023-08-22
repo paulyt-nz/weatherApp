@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { checkNotifiedToday } from './notificationFunctions'
 import { expect, jest, test } from '@jest/globals';
 import { WeatherNotificationSubscription } from '../common/weather'
@@ -7,6 +8,7 @@ test("test if time notified_at is within the last 24 hours", () =>{
     const request : WeatherNotificationSubscription = {
         location: 'alskdjflkajsdf',
         email: 'alskdjflkajsdf',
+        coords: null,
         constraints: {
             windDir: ['N'],
             windSpeed: { min: 10, max: 20 },
@@ -14,7 +16,7 @@ test("test if time notified_at is within the last 24 hours", () =>{
             humidity: { min: 10, max: 20 },
         },
         notified_at: new Date(1989, 6, 7),
-        _id: null
+        _id: undefined
     };
     
     jest.useFakeTimers();
@@ -30,6 +32,7 @@ test("test if time notified_at is outside the last 24 hours", () =>{
     const request : WeatherNotificationSubscription = {
         location: 'alskdjflkajsdf',
         email: 'alskdjflkajsdf',
+        coords: null,
         constraints: {
             windDir: ['N'],
             windSpeed: { min: 10, max: 20 },
@@ -37,7 +40,7 @@ test("test if time notified_at is outside the last 24 hours", () =>{
             humidity: { min: 10, max: 20 },
         },
         notified_at: new Date(1989, 6, 7),
-        _id: null
+        _id: undefined
     };
 
     jest.useFakeTimers();

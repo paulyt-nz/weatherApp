@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { checkWeatherMatchesConstraints } from './weatherFunctions'
 import { expect, jest, test } from '@jest/globals';
 import { WeatherConstaint, Weather } from '../common/weather'
