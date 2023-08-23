@@ -8,6 +8,7 @@ import { createNotification, sendNotification, checkNotifiedToday } from './noti
 
 async function connectToDB(): Promise<Db> {
   const uri = process.env.MONGO_DB;
+  console.log("uri:", uri)
   if (!uri) throw new Error("Missing MONGO_DB connection string from .env vars");
 
   const client = new MongoClient(uri);
@@ -49,9 +50,11 @@ async function poll(db: Db) {
       }
 
       if (checkWeatherMatchesConstraints(request.constraints, weather)) {
+
         const notification = createNotification(weather, request);
         console.debug(`Sending: ${notification}`)
-        await sendNotification(notification);
+        await sendNotification(notification, request.email);
+
         // update notified_at in db
         let timeNotified = new Date()
         await db.collection('subs').updateOne({_id: request._id}, { $set: {notified_at : timeNotified}})
