@@ -11,7 +11,7 @@ import type { WeatherNotificationSubscription, WindDirection } from '../../../..
 import type { ShownContraints, InputContraints } from "./types";
 
 
-export async function sendRequest(request : WeatherNotificationSubscription) {
+export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
   console.log("sending request: ", request)
   try {
     const response = await fetch("http://localhost:8081/api/notificationSub", {
@@ -38,9 +38,15 @@ export async function sendRequest(request : WeatherNotificationSubscription) {
 
 export async function getCoordsFromLocation(location: string) : Promise<number[]> {
   console.log('getting coords from location')
-  try {   
-    const res = await axios.get(`http://localhost:8081/api/coords?location=${encodeURIComponent(location)}`);
-    const coords = res.data;
+  try {     
+    const response = await fetch(`http://localhost:8081/api/coords?location=${encodeURIComponent(location)}`);
+    
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const coords = await response.json();
+    
     return coords;
   } 
   catch (err) {
@@ -150,7 +156,7 @@ export default function MainApp() {
 
       checkUserData(request);
       checkConstraints(request);
-      await sendRequest(request);
+      await sendSubscriptionRequest(request);
       setInputConstraints(inititialInputConstraints);
     } 
     catch (err) {

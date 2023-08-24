@@ -1,4 +1,4 @@
-import { sendRequest, getCoordsFromLocation, checkUserData } from './page';
+import { sendSubscriptionRequest, getCoordsFromLocation, checkUserData } from './page';
 import { WeatherNotificationSubscription } from '../../../../common/weather';
 import { expect, it } from '@jest/globals';
 
@@ -48,7 +48,7 @@ describe("app/app page.tsx", () => {
         json: jest.fn().mockResolvedValue({})
       });
 
-      await sendRequest(mockRequest);
+      await sendSubscriptionRequest(mockRequest);
 
       expect(mockFetch).toHaveBeenCalledWith("http://localhost:8081/api/notificationSub", {
         body: JSON.stringify(mockRequest),
@@ -94,7 +94,7 @@ describe("app/app page.tsx", () => {
         json: jest.fn().mockResolvedValue({}) 
       });
 
-      await sendRequest(mockRequest);
+      await sendSubscriptionRequest(mockRequest);
 
       expect(mockFetch).toHaveBeenCalledWith("http://localhost:8081/api/notificationSub", {
         body: JSON.stringify(mockRequest),
@@ -120,7 +120,7 @@ describe("app/app page.tsx", () => {
     it('should error correctly when the location is not found', () => {
       const testLocation = 'Not a real place';
 
-      expect(getCoordsFromLocation(testLocation)).rejects.toThrow('Location not found');
+      expect(getCoordsFromLocation(testLocation)).rejects.toThrow('Could not find location!');
     });
 
   });
