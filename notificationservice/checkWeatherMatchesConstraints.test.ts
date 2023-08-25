@@ -185,5 +185,3 @@ test("test if incorrect wind direction gives false", () =>{
     //Assert - run the testing functions
     expect(result).toBe(false)
 })
-
-// im just testing
