@@ -110,6 +110,15 @@ describe("app/app page.tsx", () => {
 
   describe('getCoordsFromLocation', () => {
     it('should return the correct coordinates', async () => {
+
+      const mockJsonPromise = Promise.resolve([-41.037, 174.885]);
+      const mockFetchPromise = Promise.resolve({
+        ok: true,
+        json: () => mockJsonPromise,  
+      });
+  
+      (global.fetch as jest.Mock) = jest.fn().mockImplementation(() => mockFetchPromise);
+
       const testLocation = 'Pukerua Bay';
 
       const result = await getCoordsFromLocation(testLocation);
@@ -118,6 +127,13 @@ describe("app/app page.tsx", () => {
     });
 
     it('should error correctly when the location is not found', () => {
+
+      const mockErrorFetchPromise = Promise.resolve({
+        ok: false, 
+        json: () => Promise.reject(), 
+      });
+      (global.fetch as jest.Mock) = jest.fn().mockImplementation(() => mockErrorFetchPromise);
+  
       const testLocation = 'Not a real place';
 
       expect(getCoordsFromLocation(testLocation)).rejects.toThrow('Could not find location!');
