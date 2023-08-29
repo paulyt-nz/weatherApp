@@ -5,10 +5,10 @@ import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
 import ConstraintInputForm from "./ConstraintInputForm";
-import axios from "axios"
 
 import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weather'
 import type { ShownContraints, InputContraints } from "./types";
+import background from "./backgrounds/background5.jpg"
 
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
@@ -167,25 +167,28 @@ export default function MainApp() {
   
 
   return (
-    <div className="">
+    <div className="bg-gray-200 min-h-screen flex flex-col min-h-screen">
         <Navbar />
 
-        <h1>THIS WILL BE THE MAIN APP</h1>
+        <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" style={{backgroundImage: `url(${background.src})`}}>
+            <div className="container relative">
 
-
-        <div className="">
-
-            <ConstraitCheckbox 
-                handleCheckboxChange={handleCheckboxChange} 
-                shownConstraints={shownConstraints} />
-            
-            <ConstraintInputForm 
-                inputConstraints={inputConstraints}
-                shownConstraints={shownConstraints}
-                handleInputChange={handleInputChange}
-                handleSubmit={handleSubmit}
-                handleWindDirInput={handleWindDirInput} />
-          
+                <div className="mx-auto xl:fixed xl:left-0 xl:ml-10 xl:bottom-1/2">
+                  <ConstraitCheckbox 
+                      handleCheckboxChange={handleCheckboxChange} 
+                      shownConstraints={shownConstraints} />
+                </div>
+                
+                <div className="justify-self-center m-8">
+                  <ConstraintInputForm 
+                      inputConstraints={inputConstraints}
+                      shownConstraints={shownConstraints}
+                      handleInputChange={handleInputChange}
+                      handleSubmit={handleSubmit}
+                      handleWindDirInput={handleWindDirInput} />
+                </div>
+              
+            </div>
         </div>
   
         <Footer />

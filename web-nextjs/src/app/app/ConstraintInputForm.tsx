@@ -17,7 +17,9 @@ export default function ConstraintInputForm (props: ConstraintInputFormProps) {
     const { inputConstraints, shownConstraints, handleInputChange, handleSubmit, handleWindDirInput } = props;
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="bg-gray-100 p-8 rounded-xl shadow-lg max-w-xl mx-auto space-y-6" onSubmit={handleSubmit}>
+
+            <legend className="text-lg font-semibold mb-3 text-gray-600">Enter your constraints</legend>
 
             <TextInput 
               inputName="email" 
@@ -75,7 +77,7 @@ export default function ConstraintInputForm (props: ConstraintInputFormProps) {
                 constraintStateKey={{min: 'humidityMinInput', max: 'humidityMaxInput'}} />
             )}
 
-            <button className="" type="submit" id="submit">Submit</button>
+            <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200" type="submit" id="submit">Submit</button>
 
         </form>
     )
