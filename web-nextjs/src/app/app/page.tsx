@@ -5,10 +5,11 @@ import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
 import ConstraintInputForm from "./ConstraintInputForm";
-
 import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weather'
 import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
@@ -75,6 +76,10 @@ function checkConstraints(request : WeatherNotificationSubscription) {
   // validate contraint data here
   //    - make sure that min < max for all of them
   //    - make sure that at least one type of constraint is present
+}
+
+function showSuccessNotification() { 
+  toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>);
 }
 
 
@@ -157,6 +162,7 @@ export default function MainApp() {
       checkUserData(request);
       checkConstraints(request);
       await sendSubscriptionRequest(request);
+      showSuccessNotification();
       setInputConstraints(inititialInputConstraints);
     } 
     catch (err) {
@@ -170,7 +176,9 @@ export default function MainApp() {
     <div className="bg-gray-200 min-h-screen flex flex-col min-h-screen">
         <Navbar />
 
-        <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" style={{backgroundImage: `url(${background.src})`}}>
+        <ToastContainer />
+
+        <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" onClick={showSuccessNotification} style={{backgroundImage: `url(${background.src})`}}>
             <div className="container relative">
 
                 <div className="mx-auto xl:fixed xl:left-0 xl:ml-10 xl:bottom-1/2">
