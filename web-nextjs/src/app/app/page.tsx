@@ -79,7 +79,9 @@ function checkConstraints(request : WeatherNotificationSubscription) {
 }
 
 function showSuccessNotification() { 
-  toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>);
+  toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
+    className: 'success-message'
+  });
 }
 
 
@@ -178,7 +180,7 @@ export default function MainApp() {
 
         <ToastContainer />
 
-        <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" onClick={showSuccessNotification} style={{backgroundImage: `url(${background.src})`}}>
+        <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" style={{backgroundImage: `url(${background.src})`}}>
             <div className="container relative">
 
                 <div className="mx-auto xl:fixed xl:left-0 xl:ml-10 xl:bottom-1/2">

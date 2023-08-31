@@ -19,7 +19,7 @@ export default function ConstraintInputForm (props: ConstraintInputFormProps) {
     return (
         <form className="bg-gray-100 p-8 rounded-xl shadow-lg max-w-xl mx-auto space-y-6" onSubmit={handleSubmit}>
 
-            <legend className="text-lg font-semibold mb-3 text-gray-600">Enter your constraints</legend>
+            <legend id="constraint-legend" className="text-lg font-semibold mb-3 text-gray-600">Enter your constraints</legend>
 
             <TextInput 
               inputName="email" 
