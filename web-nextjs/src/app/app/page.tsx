@@ -27,7 +27,6 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
       throw new Error(`${response.status} ${response.statusText}`);
     }
 
-    window.alert("Congrats you are now subscribed!");
   } catch (error: unknown) {
     if (error instanceof Error) {
       window.alert(error.message);
@@ -78,9 +77,15 @@ function checkConstraints(request : WeatherNotificationSubscription) {
   //    - make sure that at least one type of constraint is present
 }
 
-function showSuccessNotification() { 
+function showSuccessMessage() { 
   toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
     className: 'success-message'
+  });
+}
+
+function showErrorMessage() { 
+  toast.error(<div>Sorry, something went wrong!<br/>Please try again later</div>, {
+    className: 'error-message'
   });
 }
 
@@ -164,7 +169,7 @@ export default function MainApp() {
       checkUserData(request);
       checkConstraints(request);
       await sendSubscriptionRequest(request);
-      showSuccessNotification();
+      showSuccessMessage();
       setInputConstraints(inititialInputConstraints);
     } 
     catch (err) {
