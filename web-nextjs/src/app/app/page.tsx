@@ -5,10 +5,11 @@ import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
 import ConstraintInputForm from "./ConstraintInputForm";
-
 import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weather'
 import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
@@ -26,7 +27,6 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
       throw new Error(`${response.status} ${response.statusText}`);
     }
 
-    window.alert("Congrats you are now subscribed!");
   } catch (error: unknown) {
     if (error instanceof Error) {
       window.alert(error.message);
@@ -75,6 +75,18 @@ function checkConstraints(request : WeatherNotificationSubscription) {
   // validate contraint data here
   //    - make sure that min < max for all of them
   //    - make sure that at least one type of constraint is present
+}
+
+function showSuccessMessage() { 
+  toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
+    className: 'success-message'
+  });
+}
+
+function showErrorMessage() { 
+  toast.error(<div>Sorry, something went wrong!<br/>Please try again later</div>, {
+    className: 'error-message'
+  });
 }
 
 
@@ -157,6 +169,7 @@ export default function MainApp() {
       checkUserData(request);
       checkConstraints(request);
       await sendSubscriptionRequest(request);
+      showSuccessMessage();
       setInputConstraints(inititialInputConstraints);
     } 
     catch (err) {
@@ -169,6 +182,8 @@ export default function MainApp() {
   return (
     <div className="bg-gray-200 min-h-screen flex flex-col min-h-screen">
         <Navbar />
+
+        <ToastContainer />
 
         <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" style={{backgroundImage: `url(${background.src})`}}>
             <div className="container relative">

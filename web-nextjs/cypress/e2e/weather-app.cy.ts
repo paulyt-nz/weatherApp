@@ -30,6 +30,8 @@ describe('Weather App', () => {
         cy.get('#humidityMax').type('20')
 
         cy.get('#submit').click()
+
+        cy.get('.success-message').should('be.visible');
         
         cy.wait('@postSubscription')
           .then((interception) => {
@@ -60,6 +62,7 @@ describe('Weather App', () => {
                 assert.fail("Interception or request was undefined");
             }
         })
+          
     })
   });
 
@@ -71,7 +74,7 @@ describe('Weather App', () => {
   
       cy.url().should('include', '/app')
 
-      cy.get('h1').contains('THIS WILL BE THE MAIN APP')
+      cy.get('#constraint-legend').contains('Enter your constraints')
     })
   });
 });
