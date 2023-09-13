@@ -1,45 +1,31 @@
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weatherTypes'
 import { type Db, MongoClient } from 'mongodb';
 import fetch from 'node-fetch';
+import { log } from '../common/logger';
 
 const MapBoxApiKey = process.env.MAPBOX;
 if (!MapBoxApiKey) {
+  log.error('Missing MAPBOX API key from .env vars')
   throw new Error("Missing MAPBOX API key from .env vars");
 }
 
 const OpenWeatherApiKey = process.env.OPEN_WEATHER;
 if (!OpenWeatherApiKey) {
+  log.error('Missing OPEN_WEATHER API key from .env vars')
   throw new Error("Missing OPEN_WEATHER API key from .env vars");
 }
+
 
 export async function getRequests(db: Db): Promise<WeatherNotificationSubscription[]> {
     // todo check database for requests
     // todo support pagination or streaming
     // todo look into what a generic is
+    log.debug('Getting requests from Mongo')
     const collection = db.collection<WeatherNotificationSubscription>('subs');
   
     return collection.find().toArray()
   }
 
-  export async function convertLocationToCoords (location: string): Promise<number[] | null> {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MapBoxApiKey}`
-
-    try {
-        const res = await fetch(url)
-        console.debug("res:  ", res)
-        const data = await res.json()
-        console.debug("data:  ",data)
-
-        const [lon, lat] : number[] = data.features[0].center
-        console.debug('lat: ', lat, 'long: ', lon)
-
-        return Promise.resolve([lat, lon])
-    }
-    catch (err) {
-        console.error('ERROR', err)
-        return null
-    }
-  }
 
 export function convertDegToCompass(deg: number): WindDirection {
     if (deg < 0 || deg > 360) {
@@ -67,13 +53,14 @@ export function convertDegToCompass(deg: number): WindDirection {
   }
 }
   
-export async function getWeather(location: string): Promise<Weather | null> {
-  const coords = await convertLocationToCoords(location);
+
+export async function getWeather(coords: number[]): Promise<Weather | null> {
   
   if (!coords) {
-    console.error('No coords found')
-    return null
+    log.error('No coords found')
+    return null;
   }
+
   const [lat, lon] = coords;
   
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OpenWeatherApiKey}&units=metric`
@@ -81,7 +68,6 @@ export async function getWeather(location: string): Promise<Weather | null> {
   try{
     const res = await fetch(url);
     const data = await res.json();
-    console.debug('Data from OpenWeather:', data);
 
     const weather: Weather = {
       temperature: data.main.temp,
@@ -90,60 +76,30 @@ export async function getWeather(location: string): Promise<Weather | null> {
       humidity: data.main.humidity,
     }
 
-    console.debug('weather: ', weather);
-    return Promise.resolve(weather)
+    return weather;
   } 
   catch (err) {
-    console.error("ERROR", err)
+    log.error("Could not get Weather", err)
     return null
   }
 }
+  
 
-export async function getFakeWeather(location: string): Promise<Weather | null> {
-   const getRandomWind = (): WindDirection => {
-        const directions: WindDirection[] = ["N" , "NE" , "E" , "SE",  "S" , "SW" , "W" , "NW"]
-        return directions[Math.floor(Math.random() * directions.length)]
-     }
-  
-  
-      const weather: Weather = {
-        humidity: Math.random() * 100,
-        temperature: Math.random() * 40,
-        windDir: getRandomWind(),
-        windSpeed: Math.random() * 100
-  
-    }
-    return Promise.resolve(weather)
-}
-  
-export function checkOneWeatherWithConstraints(constraintValueMin: number, constraintValueMax: number, weatherValue: number ): boolean {
-    if (weatherValue > constraintValueMin && weatherValue < constraintValueMax) {
-        console.debug('inside checkOneWeatherWithConstraints true')
-      return true
-    } else {
-        console.debug('inside checkOneWeatherWithConstraints false')
-      return false
-    }
-  }
-  
-  
-  // todo use jest to test
 export function checkWeatherMatchesConstraints(
     constraints: WeatherConstaint,
     weather: Weather
   ): boolean {
-    // todo check if weather matches
-  
+
       if(constraints.windSpeed) {
         if (constraints.windSpeed.min !== undefined) {
           if(weather.windSpeed < constraints.windSpeed.min) {
-            console.debug(`windspeed is less than min - min=${constraints.windSpeed.min} actual=${weather.windSpeed}`)
+            log.debug(`windspeed is less than min - min=${constraints.windSpeed.min} actual=${weather.windSpeed}`)
             return false;
           }
         }
         if (constraints.windSpeed.max !== undefined) {
           if(weather.windSpeed > constraints.windSpeed.max) {
-            console.debug('windspeed is more than max')
+            log.debug(`windspeed is more than max - max=${constraints.windSpeed.max} actual=${weather.windSpeed}`)
             return false;
           }
         }
@@ -152,11 +108,13 @@ export function checkWeatherMatchesConstraints(
       if(constraints.temperature) {
         if (constraints.temperature.min !== undefined) {
           if(weather.temperature < constraints.temperature.min) {
+            log.debug(`temerature is less than min - min=${constraints.temperature.min} actual=${weather.temperature}`)
             return false;
           }
         }
         if (constraints.temperature.max !== undefined) {
           if(weather.temperature > constraints.temperature.max) {
+            log.debug(`temperature is more than max - max=${constraints.temperature.max} actual=${weather.temperature}`)
             return false;
           }
         }
@@ -165,11 +123,13 @@ export function checkWeatherMatchesConstraints(
       if(constraints.humidity) {
         if (constraints.humidity.min !== undefined) {
           if(weather.humidity < constraints.humidity.min) {
+            log.debug(`humidity is less than min - min=${constraints.humidity.min} actual=${weather.humidity}`)
             return false;
           }
         }
         if (constraints.humidity.max !== undefined) {
           if(weather.humidity > constraints.humidity.max) {
+            log.debug(`humidity is more than max - max=${constraints.humidity.max} actual=${weather.humidity}`)
             return false;
           }
         }
@@ -179,6 +139,7 @@ export function checkWeatherMatchesConstraints(
         let windDirMatch = constraints.windDir.some(dir => dir === weather.windDir) // true or false
         
         if(windDirMatch === false) {
+          log.debug(`wind direction does not match - expected=${constraints.windDir} actual=${weather.windDir}`)
           return false
         }
       }
