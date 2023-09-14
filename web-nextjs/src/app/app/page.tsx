@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"
+import { useState, CSSProperties } from "react"
 import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
@@ -177,15 +177,27 @@ export default function MainApp() {
       // make a nice error handling message here
     }
   }
+
+  const navbarStyles: CSSProperties = {
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backdropFilter: 'blur(1px)',
+    color: 'white'
+  }
+
+  const footerStyles: CSSProperties = {
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backdropFilter: 'blur(1px)',
+    color: 'white'
+  }
   
 
   return (
-    <div className="bg-gray-200 min-h-screen flex flex-col min-h-screen">
-        <Navbar />
+    <div className="bg-gray-200 min-h-screen flex flex-col min-h-screen bg-cover bg-center" style={{backgroundImage: `url(${background.src})`}}>
+        <Navbar style={navbarStyles}/>
 
         <ToastContainer />
 
-        <div className="relative w-full min-h-full bg-cover bg-center overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" style={{backgroundImage: `url(${background.src})`}}>
+        <div className="relative w-full min-h-full overflow-y-auto flex-grow flex flex-col lg:justify-center items-center" >
             <div className="container relative">
 
                 <div className="mx-auto xl:fixed xl:left-0 xl:ml-10 xl:bottom-1/2">
@@ -206,7 +218,7 @@ export default function MainApp() {
             </div>
         </div>
   
-        <Footer />
+        <Footer style={footerStyles}/>
     </div>
   )
 }
