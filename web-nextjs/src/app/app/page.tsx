@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, CSSProperties } from "react"
+import Head from 'next/head'
 import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
@@ -10,85 +11,26 @@ import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Metadata } from 'next'
+import { checkConstraints, checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
 
 
-export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
-  console.log("sending request: ", request)
-  try {
-    const response = await fetch("http://localhost:8081/api/notificationSub", {
-      body: JSON.stringify(request),
-      method: "POST",
-      headers: {
-        "content-type": "application/JSON"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
-    }
-
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      window.alert(error.message);
-  } else {
-      window.alert("An unexpected error occurred");
-  }
-  }
+export const metadata: Metadata = {
+  title: '########S',
 }
 
-export async function getCoordsFromLocation(location: string) : Promise<number[]> {
-  console.log('getting coords from location')
-  try {     
-    const response = await fetch(`http://localhost:8081/api/coords?location=${encodeURIComponent(location)}`);
-    
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const coords = await response.json();
-    
-    return coords;
-  } 
-  catch (err) {
-    window.alert("Sorry could not find your location! Please try something else.")
-    console.debug(err)
-    throw new Error("Could not find location!");
-  }
-}
-
-export function checkUserData(request : WeatherNotificationSubscription) {
-  if (!request.email || request.email === "") { 
-    window.alert("Missing email address!") 
-    return;
-  }
-  if (!request.location || request.location === "") { 
-    window.alert("Missing location!") 
-    return;
-  }
-  if (!request.coords || request.coords.length !== 2) {  
-    window.alert("Location not found!") 
-    return;
-  }
-}
-
-function checkConstraints(request : WeatherNotificationSubscription) {
-  // validate contraint data here
-  //    - make sure that min < max for all of them
-  //    - make sure that at least one type of constraint is present
-}
-
-function showSuccessMessage() { 
+export function showSuccessMessage() { 
   toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
     className: 'success-message'
   });
 }
 
-function showErrorMessage() { 
+
+export function showErrorMessage() { 
   toast.error(<div>Sorry, something went wrong!<br/>Please try again later</div>, {
     className: 'error-message'
   });
 }
-
 
 export default function MainApp() {
 
@@ -189,8 +131,7 @@ export default function MainApp() {
     backdropFilter: 'blur(1px)',
     color: 'white'
   }
-  
-
+   
   return (
     <div className="bg-gray-200 min-h-screen flex flex-col min-h-screen bg-cover bg-center" style={{backgroundImage: `url(${background.src})`}}>
         <Navbar style={navbarStyles}/>
