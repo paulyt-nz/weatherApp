@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, CSSProperties } from "react"
-import Head from 'next/head'
 import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
@@ -14,9 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Metadata } from 'next'
 import { checkConstraints, checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
 
-
 export const metadata: Metadata = {
-  title: '########S',
+  title: 'Adventure Alarm | APP',
 }
 
 export function showSuccessMessage() { 
@@ -24,13 +22,12 @@ export function showSuccessMessage() {
     className: 'success-message'
   });
 }
-
-
 export function showErrorMessage() { 
   toast.error(<div>Sorry, something went wrong!<br/>Please try again later</div>, {
     className: 'error-message'
   });
 }
+
 
 export default function MainApp() {
 

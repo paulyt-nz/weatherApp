@@ -3,6 +3,12 @@ import Link from 'next/link';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import homepagePhoto from './homepage-photo.jpg';
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Adventure Alarm | Home',
+  description: 'Adventure Alarm is a weather notification app that allows you to set up notifications for weather conditions suited to your adventures.',
+}
 
 export default function Home() {
 
@@ -27,7 +33,7 @@ export default function Home() {
           style={{ textShadow: '4px 4px 10px rgba(0, 0, 0, 1)' }}>
             Welcome to your Adventure Alarm
         </h1>
-        <Link className="bg-black bg-opacity-60 text-gray-300 font-bold p-4 rounded hover:bg-opacity-40 hover:text-white transition duration-150" id="enter" href="/app">Enter App</Link>
+        <Link className="bg-black bg-opacity-80 text-gray-300 font-bold p-4 rounded hover:bg-opacity-40 hover:text-white transition duration-150" id="enter" href="/app">Enter App</Link>
         <p></p>
       </div>
 
