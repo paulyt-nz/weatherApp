@@ -8,7 +8,7 @@ test("test if time notified_at is within the last 24 hours", () =>{
     const request : WeatherNotificationSubscription = {
         location: 'alskdjflkajsdf',
         email: 'alskdjflkajsdf',
-        coords: null,
+        coords: [0,0],
         constraints: {
             windDir: ['N'],
             windSpeed: { min: 10, max: 20 },
@@ -32,7 +32,7 @@ test("test if time notified_at is outside the last 24 hours", () =>{
     const request : WeatherNotificationSubscription = {
         location: 'alskdjflkajsdf',
         email: 'alskdjflkajsdf',
-        coords: null,
+        coords: [0,0],
         constraints: {
             windDir: ['N'],
             windSpeed: { min: 10, max: 20 },

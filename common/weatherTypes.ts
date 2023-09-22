@@ -15,7 +15,7 @@ export type WeatherConstaint = {
 export type WeatherNotificationSubscription = {
     location: string;
 
-    coords: number[] | null;
+    coords: number[];
 
     constraints: WeatherConstaint;
 

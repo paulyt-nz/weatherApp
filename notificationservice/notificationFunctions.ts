@@ -1,14 +1,17 @@
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weather'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weatherTypes'
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
+import { log } from '../common/logger';
 
 const MailgunApiKey = process.env.MAILGUN;
 if (!MailgunApiKey) {
+  log.error('Missing MAILGUN API key from .env vars')
   throw new Error("Missing MAILGUN API key from .env vars");
 }
 
 const MailgunDomain = process.env.MAILGUN_DOMAIN;     // domain needs to be verified in the mailgun control panel
 if (!MailgunDomain) {
+  log.error('Missing MAILGUN DOMAIN from .env vars')
   throw new Error("Missing MAILGUN DOMAIN from .env vars");
 } 
 
@@ -16,15 +19,13 @@ export function createNotification(
     weather: Weather,
     request: WeatherNotificationSubscription
   ): string {
-    // this is where you would create a nice email message
-    // e.g. the weather is going to be x at y matching your constraints
+   log.debug(`Creating notification for ${request.email} request ${request.location}`)
     
     const { location } = request;
-    
     const { windSpeed, windDir, humidity, temperature } = request.constraints;
     
-    
-    let notification = `Looks like the weather at ${location} is just what you were after!`
+    // todo - make my notification message better
+    let notification = `Looks like the weather at ${location} is just what you were after!`;
   
     return notification
 }
@@ -40,15 +41,15 @@ export async function sendNotification(notification: string, email: string): Pro
       subject: 'ITS LOOKING GOOD OUT THERE!',
       text: notification
     };
-    
-    console.debug(messageData)
-    console.debug(MailgunDomain)
+
+    log.debug(`Sending notification to ${email}`)
 
     try {
       const res = await client.messages.create(MailgunDomain as string, messageData);
-      console.log(res);
+      log.debug('Mailgun response: ', res);
       return;
     } catch (err : any) {
+      log.error('Email not sent: ', err);
       throw new Error("Email not sent: ", err);
     }
 }
@@ -61,6 +62,8 @@ export function checkNotifiedToday(request: WeatherNotificationSubscription): bo
       if (timeNotified > time24HoursAgo) {
         return true
       } 
+      log.info("Notification message has already been sent today")
     }
+    
     return false
 }
