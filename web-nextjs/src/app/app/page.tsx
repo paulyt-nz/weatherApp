@@ -67,12 +67,23 @@ export default function MainApp() {
     }));
   }
 
-  function handleWindDirInput(e: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
-    setInputConstraints(prevState => ({
-      ...prevState,
-      windDirInput: selectedOptions as WindDirection[]
-    }));
+  function handleWindDirInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value as WindDirection;
+
+    setInputConstraints(prevConstraints => {
+        let updatedWindDirs;
+
+        if (e.target.checked) {
+            updatedWindDirs = [...prevConstraints.windDirInput, value];
+        } else {
+            updatedWindDirs = prevConstraints.windDirInput.filter(dir => dir !== value);
+        }
+
+        return {
+            ...prevConstraints,
+            windDirInput: updatedWindDirs
+        };
+    });
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -150,7 +161,7 @@ export default function MainApp() {
                       shownConstraints={shownConstraints}
                       handleInputChange={handleInputChange}
                       handleSubmit={handleSubmit}
-                      handleWindDirInput={handleWindDirInput} />
+                      handleWindDirInputChange={handleWindDirInputChange} />
                 </div>
               
             </div>

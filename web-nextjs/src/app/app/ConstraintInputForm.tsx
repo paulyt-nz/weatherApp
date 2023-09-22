@@ -8,13 +8,13 @@ interface ConstraintInputFormProps {
     shownConstraints: ShownContraints
     handleInputChange: (currentInput: keyof InputContraints, value: string) => void,
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>,
-    handleWindDirInput: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    handleWindDirInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 
 export default function ConstraintInputForm (props: ConstraintInputFormProps) {
 
-    const { inputConstraints, shownConstraints, handleInputChange, handleSubmit, handleWindDirInput } = props;
+    const { inputConstraints, shownConstraints, handleInputChange, handleSubmit, handleWindDirInputChange } = props;
 
     return (
         <form className="bg-gray-100 p-8 rounded-xl shadow-lg max-w-xl mx-auto space-y-6" onSubmit={handleSubmit}>
@@ -40,7 +40,7 @@ export default function ConstraintInputForm (props: ConstraintInputFormProps) {
             />
 
             {shownConstraints.showWindDir && (
-              <WindDirInput handleWindDirInput={handleWindDirInput}/>
+              <WindDirInput handleWindDirInputChange={handleWindDirInputChange}/>
             )}
 
             {shownConstraints.showWindSpeed && (  
