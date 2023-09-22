@@ -23,16 +23,6 @@ export default function WindDirInput (props: WindDirInputProps) {
                     ))}
                 </div>
             </div>
-
-
-            {/* <label className="block mb-2 text-sm font-medium text-gray-600" htmlFor="windDir">Wind Direction</label>
-            <select className="w-full p-2 bg-gray-200 rounded-md focus:outline-none focus:border-blue-500 border-2 text-gray-600" name="windDirection" id="windDir" multiple onChange={handleWindDirInput}>
-
-                {windDirections.map((dir) => (
-                    <option key={dir} value={dir}>{dir}</option>
-                ))}
-                
-            </select> */}
         </div>
     )
 }
