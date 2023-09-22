@@ -1,4 +1,4 @@
-import { WeatherNotificationSubscription } from "../../../common/weather";
+import { WeatherNotificationSubscription } from "../../../common/weatherTypes";
 
 describe('Weather App', () => {
   describe('/app', () => {
