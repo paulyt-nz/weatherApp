@@ -21,7 +21,8 @@ describe('Weather App', () => {
         cy.get('#email').type('hello@paulyt')
         cy.get('#location').type('Pukerua Bay')
 
-        cy.get('#windDir').select('N')
+        cy.get('#N').check()
+        cy.get('#S').check()
         cy.get('#windSpeedMin').type('10')
         cy.get('#windSpeedMax').type('20')
         cy.get('#tempMin').type('10')
@@ -52,7 +53,7 @@ describe('Weather App', () => {
               assert.equal(request.notified_at, null);
               assert.equal(request._id, undefined);
 
-              assert.deepEqual(request.constraints.windDir, ['N']);
+              assert.deepEqual(request.constraints.windDir, ['N', 'S']);
               assert.deepEqual(request.constraints.windSpeed, { min: 10, max: 20 });
               assert.deepEqual(request.constraints.temperature, { min: 10, max: 20 });
               assert.deepEqual(request.constraints.humidity, { min: 10, max: 20 });
