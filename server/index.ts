@@ -3,7 +3,7 @@ require("dotenv").config();
 import express from "express";
 import  cors  from "cors";
 import { client } from "./db/db";
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weather'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weatherTypes'
 import { convertLocationToCoords } from "./location";
 import { log } from "../common/logger";
 
@@ -15,16 +15,20 @@ app.use(express.json());
 app.use(cors())
 
 
-app.get("/api", (req, res) => {
-  res.send("Welcome to the weather!");
-});
-
-
-function constraintsValid(constraints: Partial<WeatherConstaint>): boolean {
+function areConstraintsValid(constraints: Partial<WeatherConstaint>): boolean {
   log.debug("Validating constraints")
   log.debug("Constraints: ", constraints)
 
-  // todo more checks - wind direction check still needed
+  if (constraints.windDir && constraints.windDir.length) {
+    const validWindDirections : WindDirection[] = [ "N", "NE", "E", "SE", "S", "SW", "W", "NW" ]
+
+    for (let dir of constraints.windDir) {
+      if (!validWindDirections.includes(dir)) {
+        log.error("Invalid wind direction")
+        return false;
+      }
+    }
+  }
 
   if (constraints.windSpeed) {
     if (!constraints.windSpeed.min && !constraints.windSpeed.max) {
@@ -46,6 +50,11 @@ function constraintsValid(constraints: Partial<WeatherConstaint>): boolean {
   }
   return true;
 }
+
+
+app.get("/api", (req, res) => {
+  res.send("Welcome to the weather!");
+});
 
 
 app.get("/api/coords", async (req, res) => {
@@ -113,7 +122,7 @@ app.post("/api/notificationSub", async (req, res) => {
     if (
       !constraints ||
       typeof constraints !== "object" ||
-      !constraintsValid(constraints)
+      !areConstraintsValid(constraints)
     ) {
       log.error("Invalid constraints")
       res.status(400).send("Invalid constraints");
