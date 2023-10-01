@@ -18,8 +18,8 @@ export async function convertLocationToCoords (location: string): Promise<number
         const data = await res.json() as any
 
         if (!data?.features?.length) {   
-            log.error(`No data returned for location: ${location}`)    
-            throw new Error('No data returned')
+            log.error(`Could not find location: ${location}`)    
+            throw new Error(`Could not find location: ${location}`)
         }
   
         const [lon, lat] : number[] = data.features[0].center
