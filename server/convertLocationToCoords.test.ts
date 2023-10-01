@@ -1,6 +1,5 @@
-//require('dotenv').config();
 process.env.MAPBOX = 'mock-mapbox-api-key';
-import { convertLocationToCoords } from './location';
+import { convertLocationToCoords } from './convertLocationToCoords';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch', () => {
