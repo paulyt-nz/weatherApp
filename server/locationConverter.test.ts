@@ -1,6 +1,6 @@
 process.env.MAPBOX = 'mock-mapbox-api-key';
+import { jest, describe, it, expect } from '@jest/globals';
 import { convertLocationToCoords } from './convertLocationToCoords';
-import fetch from 'node-fetch';
 
 jest.mock('node-fetch', () => {
     return jest.fn(() => Promise.resolve({
