@@ -1,4 +1,5 @@
-import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weather'
+import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weatherTypes';
+import { log } from '../../../../common/logger';
 
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
@@ -18,9 +19,11 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
 
   } catch (error: unknown) {
     if (error instanceof Error) {
-      window.alert(error.message);
+      log.error(error.message);
+      throw new Error(error.message);
   } else {
-      window.alert("An unexpected error occurred");
+      log.error("An unexpected error occurred");
+      throw new Error("An unexpected error occurred");
   }
   }
 }
@@ -40,8 +43,7 @@ export async function getCoordsFromLocation(location: string) : Promise<number[]
     return coords;
   } 
   catch (err) {
-    window.alert("Sorry could not find your location! Please try something else.")
-    console.debug(err)
+    log.error(err)
     throw new Error("Could not find location!");
   }
 }

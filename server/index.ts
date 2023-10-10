@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 import express from "express";
-import  cors  from "cors";
+import cors  from "cors";
 import { client } from "./db/db";
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weatherTypes'
-import { convertLocationToCoords } from "./convertLocationToCoords";
+import { convertLocationToCoords } from "./locationConverter";
 import { log } from "../common/logger";
-import { areConstraintsValid } from "./areConstrainstValid";
+import { areConstraintsValid } from "./constraintValidation";
 
 const port = process.env.PORT ?? 3000;
 
