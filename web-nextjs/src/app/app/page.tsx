@@ -22,8 +22,8 @@ export function showSuccessMessage() {
     className: 'success-message'
   });
 }
-export function showErrorMessage() { 
-  toast.error(<div>Sorry, something went wrong!<br/>Please try again later</div>, {
+export function showErrorMessage(errorMessage : string) { 
+  toast.error(<div>{errorMessage}</div>, {
     className: 'error-message'
   });
 }
@@ -96,31 +96,31 @@ export default function MainApp() {
 
   function checkConstraints(request : WeatherNotificationSubscription) {
     if (shownConstraints.showWindDir) {
-      if (!inputConstraints.windDirInput.length) {
+      if (!request.constraints.windDir || !request.constraints.windDir.length) {
         throw new Error("No wind direction selected! Either add a wind direction or deselect that option in the checkbox.")
       }
     }
 
     if (shownConstraints.showWindSpeed) {
-      if (!inputConstraints.windSpeedMinInput) {
+      if (!request.constraints.windSpeed || !request.constraints.windSpeed.min) {
         throw new Error("Missing minimum wind speed! Either add a minimum windspeed or deselect that option in the checkbox.")
       }
-      if (!inputConstraints.windSpeedMaxInput) {
+      if (!request.constraints.windSpeed.max) {
         throw new Error("Missing maximum wind speed! Either add a maiximum windspeed or deselect that option in the checkbox.")
       }
-      if (Number(inputConstraints.windSpeedMinInput) > Number(inputConstraints.windSpeedMaxInput)) {
+      if (Number(request.constraints.windSpeed.min) > Number(request.constraints.windSpeed.max)) {
         throw new Error("Minimum wind speed must be less than maximum wind speed!")
       }
     }
 
     if (shownConstraints.showTemp) {
-      if (!inputConstraints.tempMinInput) {
+      if (!request.constraints.temperature || !request.constraints.temperature.min) {
         throw new Error("Missing minimum temperature! Either add a minimum temperature or deselect that option in the checkbox.")
       }
-      if (!inputConstraints.tempMaxInput) {
+      if (!request.constraints.temperature.max) {
         throw new Error("Missing maximum temperature! Either add a maximum temperature or deselect that option in the checkbox.")
       }
-      if (Number(inputConstraints.tempMinInput) > Number(inputConstraints.tempMaxInput)) {
+      if (Number(request.constraints.temperature.min) > Number(request.constraints.temperature.max)) {
         throw new Error("Minimum temperature must be less than maximum temperature!")
       }
     }
@@ -176,9 +176,9 @@ export default function MainApp() {
       showSuccessMessage();
       setInputConstraints(inititialInputConstraints);
     } 
-    catch (err) {
-      console.debug(err)
-      // make a nice error handling message here
+    catch (err: any) {
+      console.debug(err as Error)
+      showErrorMessage((err as Error).message);
     }
   }
 

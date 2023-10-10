@@ -19,10 +19,8 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
 
   } catch (error: unknown) {
     if (error instanceof Error) {
-      log.error(error.message);
       throw new Error(error.message);
   } else {
-      log.error("An unexpected error occurred");
       throw new Error("An unexpected error occurred");
   }
   }
@@ -43,7 +41,6 @@ export async function getCoordsFromLocation(location: string) : Promise<number[]
     return coords;
   } 
   catch (err) {
-    log.error(err)
     throw new Error("Could not find any coordinates for that location!");
   }
 }
