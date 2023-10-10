@@ -1,4 +1,5 @@
-import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weather'
+import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weatherTypes';
+import { log } from '../../../../common/logger';
 
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
@@ -18,9 +19,9 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
 
   } catch (error: unknown) {
     if (error instanceof Error) {
-      window.alert(error.message);
+      throw new Error(error.message);
   } else {
-      window.alert("An unexpected error occurred");
+      throw new Error("An unexpected error occurred");
   }
   }
 }
@@ -40,34 +41,23 @@ export async function getCoordsFromLocation(location: string) : Promise<number[]
     return coords;
   } 
   catch (err) {
-    window.alert("Sorry could not find your location! Please try something else.")
-    console.debug(err)
-    throw new Error("Could not find location!");
+    throw new Error("Could not find any coordinates for that location!");
   }
 }
 
 
 export function checkUserData(request : WeatherNotificationSubscription) {
   if (!request.email || request.email === "") { 
-    window.alert("Missing email address!") 
-    return;
+    throw new Error("Missing email address!") 
   }
   if (!request.location || request.location === "") { 
-    window.alert("Missing location!") 
-    return;
+    throw new Error("Missing location!") 
   }
   if (!request.coords || request.coords.length !== 2) {  
-    window.alert("Location not found!") 
-    return;
+    throw new Error("Location not found!") 
   }
-  // check Wind dir somehow
 }
 
 
-export function checkConstraints(request : WeatherNotificationSubscription) {
-  // validate contraint data here
-  //    - make sure that min < max for all of them
-  //    - make sure that at least one type of constraint is present
-}
 
 
