@@ -11,7 +11,7 @@ import background from "./backgrounds/background5.jpg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Metadata } from 'next'
-import { checkConstraints, checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
+import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
 
 export const metadata: Metadata = {
   title: 'Adventure Alarm | APP',
@@ -54,10 +54,18 @@ export default function MainApp() {
   const [ inputConstraints, setInputConstraints ] = useState<InputContraints>(inititialInputConstraints);
 
   function handleCheckboxChange(clickedCheckbox: keyof ShownContraints) {
-    setShownConstraints(prevState => ({
+    setShownConstraints(prevState => {
+      const checkedCount = Object.values(prevState).filter(value => value === true).length;
+
+      if (checkedCount === 1 && prevState[clickedCheckbox]) {
+        throw new Error ("At least one constraint must remain selected.")
+      }
+      
+      return {
       ...prevState,
       [clickedCheckbox]: !prevState[clickedCheckbox]
-    }));
+      };
+    });
   };
 
   function handleInputChange(currentInput: keyof InputContraints, value: string) {
@@ -84,6 +92,52 @@ export default function MainApp() {
             windDirInput: updatedWindDirs
         };
     });
+  }
+
+  function checkConstraints(request : WeatherNotificationSubscription) {
+    if (shownConstraints.showWindDir) {
+      if (!inputConstraints.windDirInput.length) {
+        throw new Error("No wind direction selected! Either add a wind direction or deselect that option in the checkbox.")
+      }
+    }
+
+    if (shownConstraints.showWindSpeed) {
+      if (!inputConstraints.windSpeedMinInput) {
+        throw new Error("Missing minimum wind speed! Either add a minimum windspeed or deselect that option in the checkbox.")
+      }
+      if (!inputConstraints.windSpeedMaxInput) {
+        throw new Error("Missing maximum wind speed! Either add a maiximum windspeed or deselect that option in the checkbox.")
+      }
+      if (Number(inputConstraints.windSpeedMinInput) > Number(inputConstraints.windSpeedMaxInput)) {
+        throw new Error("Minimum wind speed must be less than maximum wind speed!")
+      }
+    }
+
+    if (shownConstraints.showTemp) {
+      if (!inputConstraints.tempMinInput) {
+        throw new Error("Missing minimum temperature! Either add a minimum temperature or deselect that option in the checkbox.")
+      }
+      if (!inputConstraints.tempMaxInput) {
+        throw new Error("Missing maximum temperature! Either add a maximum temperature or deselect that option in the checkbox.")
+      }
+      if (Number(inputConstraints.tempMinInput) > Number(inputConstraints.tempMaxInput)) {
+        throw new Error("Minimum temperature must be less than maximum temperature!")
+      }
+    }
+
+    if (shownConstraints.showHumidity) {
+      if (!inputConstraints.humidityMinInput) {
+        throw new Error("Missing minimum humidity! Either add a minimum humidity or deselect that option in the checkbox.")
+      }
+      if (!inputConstraints.humidityMaxInput) {
+        throw new Error("Missing maximum humidity! Either add a maximum humidity or deselect that option in the checkbox.")
+      }      
+      if (Number(inputConstraints.humidityMinInput) > Number(inputConstraints.humidityMaxInput)) {
+        throw new Error("Minimum humidity must be less than maximum humidity!")
+      }
+    }
+
+    return true;
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

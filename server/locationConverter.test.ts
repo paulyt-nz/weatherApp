@@ -22,6 +22,9 @@ describe('convertLocationToCoords', () => {
         const coords = await convertLocationToCoords(location);
         expect(coords).toEqual([-41.289, 174.777]);
     });
+
+    it.todo('should throw an error for an invalid location');
+    it.todo('should throw an error for an empty location');
 });
 
 

@@ -44,32 +44,23 @@ export async function getCoordsFromLocation(location: string) : Promise<number[]
   } 
   catch (err) {
     log.error(err)
-    throw new Error("Could not find location!");
+    throw new Error("Could not find any coordinates for that location!");
   }
 }
 
 
 export function checkUserData(request : WeatherNotificationSubscription) {
   if (!request.email || request.email === "") { 
-    window.alert("Missing email address!") 
-    return;
+    throw new Error("Missing email address!") 
   }
   if (!request.location || request.location === "") { 
-    window.alert("Missing location!") 
-    return;
+    throw new Error("Missing location!") 
   }
   if (!request.coords || request.coords.length !== 2) {  
-    window.alert("Location not found!") 
-    return;
+    throw new Error("Location not found!") 
   }
-  // check Wind dir somehow
 }
 
 
-export function checkConstraints(request : WeatherNotificationSubscription) {
-  // validate contraint data here
-  //    - make sure that min < max for all of them
-  //    - make sure that at least one type of constraint is present
-}
 
 
