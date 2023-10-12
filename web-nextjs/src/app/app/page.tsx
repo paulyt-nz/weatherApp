@@ -58,7 +58,8 @@ export default function MainApp() {
       const checkedCount = Object.values(prevState).filter(value => value === true).length;
 
       if (checkedCount === 1 && prevState[clickedCheckbox]) {
-        throw new Error ("At least one constraint must remain selected.")
+        showErrorMessage("At least one constraint must remain selected.")
+        return prevState;
       }
       
       return {
