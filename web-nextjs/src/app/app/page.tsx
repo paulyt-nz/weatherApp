@@ -10,12 +10,8 @@ import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Metadata } from 'next'
 import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
 
-export const metadata: Metadata = {
-  title: 'Adventure Alarm | APP',
-}
 
 export function showSuccessMessage() { 
   toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
