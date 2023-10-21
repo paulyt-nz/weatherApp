@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import { areConstraintsValid } from './constraintValidation';
-import { WeatherConstaint, WindDirection } from '../common/weatherTypes'
+import { WeatherConstaint, WindDirection } from '../types/weatherTypes'
 
 describe('areConstraintsValid()', () => {
     it('should return true for valid constraints', () => {

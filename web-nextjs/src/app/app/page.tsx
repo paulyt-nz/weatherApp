@@ -5,7 +5,7 @@ import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
 import ConstraintInputForm from "./ConstraintInputForm";
-import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weatherTypes'
+import type { WeatherNotificationSubscription, WindDirection } from '../../../../types/weatherTypes'
 import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
 import { ToastContainer, toast } from 'react-toastify';

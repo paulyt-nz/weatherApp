@@ -1,6 +1,6 @@
 require("dotenv").config();
 import { setTimeout } from "timers/promises";
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weatherTypes'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../types/weatherTypes'
 import { Db, MongoClient } from 'mongodb';
 import { getRequests, getWeather, checkWeatherMatchesConstraints } from './weatherFunctions';
 import { createNotification, sendNotification, checkNotifiedToday } from './notificationFunctions';

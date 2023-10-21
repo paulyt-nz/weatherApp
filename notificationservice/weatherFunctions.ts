@@ -1,4 +1,4 @@
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weatherTypes'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../types/weatherTypes'
 import { type Db, MongoClient } from 'mongodb';
 import fetch from 'node-fetch';
 import { log } from '../common/logger';

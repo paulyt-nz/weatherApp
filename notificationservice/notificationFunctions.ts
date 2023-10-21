@@ -1,4 +1,4 @@
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../common/weatherTypes'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../types/weatherTypes'
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import { log } from '../common/logger';

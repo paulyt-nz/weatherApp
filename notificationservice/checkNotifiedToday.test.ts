@@ -1,7 +1,7 @@
 require('dotenv').config();
 import { checkNotifiedToday } from './notificationFunctions'
 import { expect, jest, test } from '@jest/globals';
-import { WeatherNotificationSubscription } from '../common/weatherTypes'
+import { WeatherNotificationSubscription } from '../types/weatherTypes'
 
 test("test if time notified_at is within the last 24 hours", () =>{
     

@@ -1,4 +1,4 @@
-import { WindDirection, WeatherConstaint } from '../common/weatherTypes'
+import { WindDirection, WeatherConstaint } from '../types/weatherTypes'
 import { log } from "../common/logger";
 
 export function areConstraintsValid(constraints: Partial<WeatherConstaint>): boolean {

@@ -3,7 +3,7 @@ require("dotenv").config();
 import express from "express";
 import cors  from "cors";
 import { client } from "./db/db";
-import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../common/weatherTypes'
+import { WindDirection, WeatherNotificationSubscription, WeatherConstaint } from '../types/weatherTypes'
 import { convertLocationToCoords } from "./locationConverter";
 import { log } from "../common/logger";
 import { areConstraintsValid } from "./constraintValidation";
