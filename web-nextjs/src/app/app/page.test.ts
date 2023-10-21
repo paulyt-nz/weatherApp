@@ -1,5 +1,5 @@
-import { sendSubscriptionRequest, getCoordsFromLocation, checkUserData } from './page';
-import { WeatherNotificationSubscription } from '../../../../common/weather';
+import { sendSubscriptionRequest, getCoordsFromLocation, checkUserData } from './appPageFunctions';
+import { WeatherNotificationSubscription } from '../../../../types/weatherTypes';
 import { expect, it } from '@jest/globals';
 
 describe("app/app page.tsx", () => {

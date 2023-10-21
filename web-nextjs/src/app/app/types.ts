@@ -1,4 +1,4 @@
-import type { WindDirection } from '../../../../common/weather'
+import type { WindDirection } from '../../../../types/weatherTypes'
 
 export interface ShownContraints {
     showWindDir: boolean,

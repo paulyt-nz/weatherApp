@@ -1,4 +1,4 @@
-import type { WeatherNotificationSubscription, WindDirection } from '../../../../common/weatherTypes';
+import type { WeatherNotificationSubscription, WindDirection } from '../../../../types/weatherTypes';
 import { log } from '../../../../common/logger';
 
 

@@ -1,4 +1,4 @@
-import { WindDirection } from "../../../../common/weatherTypes";
+import { WindDirection } from "../../../../types/weatherTypes";
 
 interface WindDirInputProps {
     handleWindDirInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
