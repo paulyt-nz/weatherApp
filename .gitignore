@@ -1,3 +1,7 @@
 node_modules
 *.js
 .env
+
+!web-nextjs/tailwind.config.js
+!web-nextjs/postcss.config.js
+!web-nextjs/jest.setup.js
