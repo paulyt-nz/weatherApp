@@ -1,5 +1,4 @@
 import type { WeatherNotificationSubscription, WindDirection } from '../../../../types/weatherTypes';
-import { log } from '../../../../common/logger';
 
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
