@@ -15,6 +15,9 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
+app.get("/api/wakeup", (req, res) => {
+  res.json("Waking up server");
+});
 
 app.get("/api/coords", async (req, res) => {
   log.debug('Request for coordinates received')
