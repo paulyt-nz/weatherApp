@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "install-all": "npm install && cd ../types && npm install && cd ../common && npm install",
     "build": "tsc",
     "start": "tsc && node index.js"
   },
