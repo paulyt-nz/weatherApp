@@ -13,19 +13,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
 
 
-export function showSuccessMessage() { 
-  toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
-    className: 'success-message'
-  });
-}
-export function showErrorMessage(errorMessage : string) { 
-  toast.error(<div>{errorMessage}</div>, {
-    className: 'error-message'
-  });
-}
-
-
 export default function MainApp() {
+
+  function showSuccessMessage() { 
+    toast.success(<div>You are now subscribed!<br/>We will email you when the weather is right!<br/>☀️🌈😎</div>, {
+      className: 'success-message'
+    });
+  }
+  function showErrorMessage(errorMessage : string) { 
+    toast.error(<div>{errorMessage}</div>, {
+      className: 'error-message'
+    });
+  }
+  
 
   const initialShownConstraints : ShownContraints = {
     showWindDir: true,
