@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "install-all": "npm install && cd ../types && npm install && cd ../common && npm install",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
