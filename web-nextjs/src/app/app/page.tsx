@@ -20,11 +20,7 @@ export default function MainApp() {
       className: 'success-message'
     });
   }
-<<<<<<< HEAD
   function showErrorMessage(errorMessage : any) { 
-=======
-  function showErrorMessage(errorMessage : string) { 
->>>>>>> fab22579590d34bcd6139b969c8f1e2f46296746
     toast.error(<div>{errorMessage}</div>, {
       className: 'error-message'
     });
