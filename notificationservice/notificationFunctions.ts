@@ -1,58 +1,104 @@
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../types/weatherTypes'
-import formData from 'form-data';
-import Mailgun from 'mailgun.js';
+import Mailjet from 'node-mailjet';
 import { log } from '../common/logger';
 
-const MailgunApiKey = process.env.MAILGUN;
-if (!MailgunApiKey) {
+
+const MailjetApikeyPublic = process.env.MAILJET_APIKEY_PUBLIC;
+console.log(MailjetApikeyPublic)
+if (!MailjetApikeyPublic) {
   log.error('Missing MAILGUN API key from .env vars')
-  throw new Error("Missing MAILGUN API key from .env vars");
+  throw new Error("Missing MAILJET_APIKEY_PUBLIC from .env vars");
 }
 
-const MailgunDomain = process.env.MAILGUN_DOMAIN;     // domain needs to be verified in the mailgun control panel
-if (!MailgunDomain) {
-  log.error('Missing MAILGUN DOMAIN from .env vars')
-  throw new Error("Missing MAILGUN DOMAIN from .env vars");
+const MailjetApikeyPrivate = process.env.MAILJET_APIKEY_PRIVATE; 
+console.log(MailjetApikeyPrivate)  
+if (!MailjetApikeyPrivate) {
+  log.error('Missing MAILJET DOMAIN from .env vars')
+  throw new Error("Missing MAILJET_APIKEY_PRIVATE from .env vars");
 } 
 
-export function createNotification(
-    weather: Weather,
-    request: WeatherNotificationSubscription
-  ): string {
+interface Notification {
+  text: string;
+  html: string;
+}
+
+
+export function createNotification( weather: Weather, request: WeatherNotificationSubscription) : Notification {
+  
    log.debug(`Creating notification for ${request.email} request ${request.location}`)
     
     const { location } = request;
-    const { windSpeed, windDir, humidity, temperature } = request.constraints;
+    const constraints = request.constraints;
+
     
-    // todo - make my notification message better
-    let notification = `Looks like the weather at ${location} is just what you were after!`;
+    let notification : Notification = {
+      text: `At Adeventure Alarm we believe that life is about doing. 
+        About taking action. 
+        About jumping at opportunities when they appear.
+        
+        And right now the weather is giving you an opportunity...
+        
+        GO DO THE THING 
+        
+        Current weather at ${location}: ${weather.windDir}, ${weather.windSpeed}, ${weather.temperature}, ${weather.humidity}
+        Your constraints: ${constraints.windDir}, ${constraints.windSpeed}, ${constraints.temperature}, ${constraints.humidity}`,
+      html: `<h3>At Adeventure Alarm we believe that life is about doing.</h3> 
+      <h3>About taking action.</h3> 
+      <h3>About jumping at opportunities when they appear.</h3>
+      
+      <h3>And right now the weather is giving you an opportunity...</h3>
+      
+      <h2>GO DO THE THING!</h2>
+      
+      <p>Current weather at ${location}: ${weather.windDir}, ${weather.windSpeed}, ${weather.temperature}, ${weather.humidity}</p>
+      <p>Your constraints: ${constraints.windDir}, ${constraints.windSpeed}, ${constraints.temperature}, ${constraints.humidity}</p>`
+    }
   
     return notification
 }
   
-export async function sendNotification(notification: string, email: string): Promise<void> {
-       
-    const mailgun = new Mailgun(formData);
-    const client = mailgun.client({username: 'WeatherApp', key: MailgunApiKey as string});
-    
-    const messageData = {
-      from: `postmaster@${MailgunDomain as string}`,                // from email needs to be verified in the mailgun control panel
-      to: email,                                          // can only send to p.d.thornton995 at this stage
-      subject: 'ITS LOOKING GOOD OUT THERE!',
-      text: notification
-    };
 
-    log.debug(`Sending notification to ${email}`)
+export async function sendNotification(notification: Notification, email: string): Promise<void> {
+  
+  log.info('Connecting to Mailjet API')
+  log.info(Mailjet)
 
-    try {
-      const res = await client.messages.create(MailgunDomain as string, messageData);
-      log.debug('Mailgun response: ', res);
-      return;
-    } catch (err : any) {
-      log.error('Email not sent: ', err);
-      throw new Error("Email not sent: ", err);
-    }
+  const mailjet = Mailjet.apiConnect( MailjetApikeyPublic as string, MailjetApikeyPrivate as string, { config: {}, options: {} });
+  
+  const messageInfo = {
+    Messages: [
+      {
+        From: {
+          Email: "p.d.thornton995@gmail.com",
+          Name: "Adventure Alarm"
+        },
+        To: [
+          {
+            Email: `${email}`,
+            Name: ""
+          }
+        ],
+        Subject: "It is time to do the thing!",
+        TextPart: `${notification.text}`,       
+        HTMLPart: `${notification.html}`
+      }
+    ]
+  }
+  
+  try {
+    const result = await mailjet
+      .post('send', { version: 'v3.1' })
+      .request(messageInfo)
+
+    log.info(`message sent to ${email}`)
+    log.info(result.body)
+  }
+  catch(err) {
+    log.error(`Error sendng message to ${email}`)
+    log.error(err)
+  }
 }
+
 
 export function checkNotifiedToday(request: WeatherNotificationSubscription): boolean {
     if (request.notified_at) {
