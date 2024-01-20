@@ -1,20 +1,7 @@
 import { WindDirection, WeatherNotificationSubscription, WeatherConstaint, Weather } from '../types/weatherTypes'
-import formData from 'form-data';
-// import Mailgun from 'mailgun.js';
 import Mailjet from 'node-mailjet';
 import { log } from '../common/logger';
 
-// const MailgunApiKey = process.env.MAILGUN;
-// if (!MailgunApiKey) {
-//   log.error('Missing MAILGUN API key from .env vars')
-//   throw new Error("Missing MAILGUN API key from .env vars");
-// }
-
-// const MailgunDomain = process.env.MAILGUN_DOMAIN;     // domain needs to be verified in the mailgun control panel
-// if (!MailgunDomain) {
-//   log.error('Missing MAILGUN DOMAIN from .env vars')
-//   throw new Error("Missing MAILGUN DOMAIN from .env vars");
-// } 
 
 const MailjetApikeyPublic = process.env.MAILJET_APIKEY_PUBLIC;
 console.log(MailjetApikeyPublic)
@@ -24,7 +11,7 @@ if (!MailjetApikeyPublic) {
 }
 
 const MailjetApikeyPrivate = process.env.MAILJET_APIKEY_PRIVATE; 
-console.log(MailjetApikeyPrivate)    // domain needs to be verified in the mailgun control panel
+console.log(MailjetApikeyPrivate)  
 if (!MailjetApikeyPrivate) {
   log.error('Missing MAILJET DOMAIN from .env vars')
   throw new Error("Missing MAILJET_APIKEY_PRIVATE from .env vars");
@@ -41,12 +28,30 @@ export function createNotification( weather: Weather, request: WeatherNotificati
    log.debug(`Creating notification for ${request.email} request ${request.location}`)
     
     const { location } = request;
-    const { windSpeed, windDir, humidity, temperature } = request.constraints;
+    const constraints = request.constraints;
+
     
-    // todo - make my notification message better
     let notification : Notification = {
-      text: `Looks like the weather at ${location} is just what you were after!`,
-      html: `skjdflakjsd`
+      text: `At Adeventure Alarm we believe that life is about doing. 
+        About taking action. 
+        About jumping at opportunities when they appear.
+        
+        And right now the weather is giving you an opportunity...
+        
+        GO DO THE THING 
+        
+        Current weather at ${location}: ${weather.windDir}, ${weather.windSpeed}, ${weather.temperature}, ${weather.humidity}
+        Your constraints: ${constraints.windDir}, ${constraints.windSpeed}, ${constraints.temperature}, ${constraints.humidity}`,
+      html: `<h3>At Adeventure Alarm we believe that life is about doing.</h3> 
+      <h3>About taking action.</h3> 
+      <h3>About jumping at opportunities when they appear.</h3>
+      
+      <h3>And right now the weather is giving you an opportunity...</h3>
+      
+      <h2>GO DO THE THING!</h2>
+      
+      <p>Current weather at ${location}: ${weather.windDir}, ${weather.windSpeed}, ${weather.temperature}, ${weather.humidity}</p>
+      <p>Your constraints: ${constraints.windDir}, ${constraints.windSpeed}, ${constraints.temperature}, ${constraints.humidity}</p>`
     }
   
     return notification
@@ -74,7 +79,7 @@ export async function sendNotification(notification: Notification, email: string
           }
         ],
         Subject: "It is time to do the thing!",
-        TextPart: `${notification.text}`,       // need to make a txt notification and an HTML notification
+        TextPart: `${notification.text}`,       
         HTMLPart: `${notification.html}`
       }
     ]
@@ -92,34 +97,6 @@ export async function sendNotification(notification: Notification, email: string
     log.error(`Error sendng message to ${email}`)
     log.error(err)
   }
-  
-  // request
-  //   .then((result) => {
-  //     console.log(result.body)
-  //     })
-  //   .catch((err) => {
-  //     console.log(err.statusCode)
-  //     })
-    // const mailgun = new Mailgun(formData);
-    // const client = mailgun.client({username: 'WeatherApp', key: MailgunApiKey as string});
-    
-    // const messageData = {
-    //   from: `postmaster@${MailgunDomain as string}`,                // from email needs to be verified in the mailgun control panel
-    //   to: email,                                          // can only send to p.d.thornton995 at this stage
-    //   subject: 'ITS LOOKING GOOD OUT THERE!',
-    //   text: notification
-    // };
-
-    // log.debug(`Sending notification to ${email}`)
-
-    // try {
-    //   const res = await client.messages.create(MailgunDomain as string, messageData);
-    //   log.debug('Mailgun response: ', res);
-    //   return;
-    // } catch (err : any) {
-    //   log.error('Email not sent: ', err);
-    //   throw new Error("Email not sent: ", err);
-    // }
 }
 
 
