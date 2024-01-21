@@ -1,12 +1,11 @@
 require("dotenv").config();
-import type { WeatherNotificationSubscription, WindDirection } from '../../../../types/weatherTypes';
+import type { WeatherNotificationSubscription } from '../../../../types/weatherTypes';
 
-const apiAddress = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:8081/"
+const apiAddress = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:8081"
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
-  //const apiAddress = process.env.BACKEND_API_URL || "http://localhost:8081"
   console.log("sending request: ", request)
-  console.log("to: ", `${apiAddress}/api/notificationSub`)
+
   try {
     const response = await fetch(`${apiAddress}/api/notificationSub`, {
       body: JSON.stringify(request),
@@ -23,18 +22,17 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new Error(error.message);
-  } else {
+    } 
+    else {
       throw new Error("An unexpected error occurred");
-  }
+    }
   }
 }
  
 
 export async function getCoordsFromLocation(location: string) : Promise<number[]> {
-  //const apiAddress = process.env.BACKEND_API_URL || "http://localhost:8081"
-
-  console.log("apiAddress: ", apiAddress)
   console.log('getting coords from location')
+
   try {     
     const response = await fetch(`${apiAddress}/api/coords?location=${encodeURIComponent(location)}`);
     
