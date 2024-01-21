@@ -1,10 +1,12 @@
-import type { WeatherNotificationSubscription, WindDirection } from '../../../../types/weatherTypes';
+import type { WeatherNotificationSubscription } from '../../../../types/weatherTypes';
 
+const apiAddress = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:8081"
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
   console.log("sending request: ", request)
+
   try {
-    const response = await fetch("http://localhost:8081/api/notificationSub", {
+    const response = await fetch(`${apiAddress}/api/notificationSub`, {
       body: JSON.stringify(request),
       method: "POST",
       headers: {
@@ -19,17 +21,19 @@ export async function sendSubscriptionRequest(request : WeatherNotificationSubsc
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new Error(error.message);
-  } else {
+    } 
+    else {
       throw new Error("An unexpected error occurred");
-  }
+    }
   }
 }
  
 
 export async function getCoordsFromLocation(location: string) : Promise<number[]> {
   console.log('getting coords from location')
+
   try {     
-    const response = await fetch(`http://localhost:8081/api/coords?location=${encodeURIComponent(location)}`);
+    const response = await fetch(`${apiAddress}/api/coords?location=${encodeURIComponent(location)}`);
     
     if (!response.ok) {
       throw new Error('Network response was not ok');
