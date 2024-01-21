@@ -1,6 +1,7 @@
 import type { WeatherNotificationSubscription } from '../../../../types/weatherTypes';
 
-const apiAddress = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:8081"
+const apiAddress = "https://weather-app-server-2k0c.onrender.com" || 
+  "http://localhost:8081"
 
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
   console.log("sending request: ", request)
