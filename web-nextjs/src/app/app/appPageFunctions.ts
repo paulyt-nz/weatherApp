@@ -1,3 +1,4 @@
+require("dotenv").config();
 import type { WeatherNotificationSubscription } from '../../../../types/weatherTypes';
 
 const apiAddress = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:8081"
