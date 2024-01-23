@@ -1,8 +1,11 @@
-import { CSSProperties } from 'react';
+"use client";
+
+import { CSSProperties, useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import homepagePhoto from './homepage-photo.jpg';
+import { sendWakeupCall } from './homePageFunctions';
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -23,6 +26,10 @@ export default function Home() {
     backdropFilter: 'blur(1px)',
     color: 'white'
   }
+
+  useEffect(() => {
+    sendWakeupCall();
+  }, []);
     
   return (
     <main className="flex flex-col justify-between min-h-screen bg-cover bg-center" style={{backgroundImage: `url(${homepagePhoto.src})`}}>
