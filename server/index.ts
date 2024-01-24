@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(cors())
 
 app.get("/api/wakeup", (req, res) => {
+  log.info("Wake up call received");
   res.json("Waking up server");
 });
 

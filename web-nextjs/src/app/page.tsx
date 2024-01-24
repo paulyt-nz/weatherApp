@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: 'Adventure Alarm is a weather notification app that allows you to set up notifications for weather conditions suited to your adventures.',
 }
 
+
 export default function Home() {
 
   const navbarStyles: CSSProperties = {

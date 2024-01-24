@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, CSSProperties } from "react"
+import { useState, CSSProperties, useEffect } from "react"
 import Footer from "../Footer"
 import Navbar from "../Navbar"
 import ConstraitCheckbox from "./ConstraintCheckbox"
@@ -10,7 +10,7 @@ import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
+import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest, sendWakeupCall } from "./appPageFunctions";
 
 
 export default function MainApp() {
@@ -33,7 +33,6 @@ export default function MainApp() {
     showTemp: true,
     showHumidity: true
   }
-
   const inititialInputConstraints: InputContraints = {
     emailInput: "",
     locationInput: "",
@@ -48,6 +47,12 @@ export default function MainApp() {
 
   const [ shownConstraints, setShownConstraints ] = useState<ShownContraints>(initialShownConstraints);
   const [ inputConstraints, setInputConstraints ] = useState<InputContraints>(inititialInputConstraints);
+
+
+  useEffect(() => {
+    sendWakeupCall();
+  }, []);
+
 
   function handleCheckboxChange(clickedCheckbox: keyof ShownContraints) {
     setShownConstraints(prevState => {
@@ -65,12 +70,14 @@ export default function MainApp() {
     });
   };
 
+
   function handleInputChange(currentInput: keyof InputContraints, value: string) {
     setInputConstraints(prevState => ({
       ...prevState,
       [currentInput]: value
     }));
   }
+
 
   function handleWindDirInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value as WindDirection;
@@ -90,6 +97,7 @@ export default function MainApp() {
         };
     });
   }
+
 
   function checkConstraints(request : WeatherNotificationSubscription) {
     if (shownConstraints.showWindDir) {
@@ -136,6 +144,7 @@ export default function MainApp() {
 
     return true;
   }
+
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
