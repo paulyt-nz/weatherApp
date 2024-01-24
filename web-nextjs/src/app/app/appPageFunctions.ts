@@ -3,6 +3,7 @@ import type { WeatherNotificationSubscription } from '../../../../types/weatherT
 const apiAddress = "https://weather-app-server-2k0c.onrender.com" || 
   "http://localhost:8081"
 
+  
 export async function sendSubscriptionRequest(request : WeatherNotificationSubscription) {
   console.log("sending request: ", request)
 
@@ -61,6 +62,14 @@ export function checkUserData(request : WeatherNotificationSubscription) {
     throw new Error("Location not found!") 
   }
 }
+
+
+export async function sendWakeupCall() {
+    console.log("sending wakeup call")
+    const res = await fetch(`${apiAddress}/api/wakeup`);
+    const result = await res.json();
+    console.log(result);
+  }
 
 
 

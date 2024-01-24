@@ -10,8 +10,7 @@ import type { ShownContraints, InputContraints } from "./types";
 import background from "./backgrounds/background5.jpg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest } from "./appPageFunctions";
-import { sendWakeupCall } from "../homePageFunctions";
+import { checkUserData, getCoordsFromLocation, sendSubscriptionRequest, sendWakeupCall } from "./appPageFunctions";
 
 
 export default function MainApp() {
