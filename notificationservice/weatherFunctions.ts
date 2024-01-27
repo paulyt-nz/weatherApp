@@ -3,11 +3,6 @@ import { type Db, MongoClient } from 'mongodb';
 import fetch from 'node-fetch';
 import { log } from '../common/logger';
 
-const MapBoxApiKey = process.env.MAPBOX;
-if (!MapBoxApiKey) {
-  log.error('Missing MAPBOX API key from .env vars')
-  throw new Error("Missing MAPBOX API key from .env vars");
-}
 
 const OpenWeatherApiKey = process.env.OPEN_WEATHER;
 if (!OpenWeatherApiKey) {
