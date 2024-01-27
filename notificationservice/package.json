@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node index.js",
     "build_start": "npm run build && npm run start",
+    "install-all": "npm install && cd ../types && npm install && cd ../common && npm install",
     "watch": "tsc -w"
   },
   "author": "",
