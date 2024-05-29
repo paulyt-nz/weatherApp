@@ -10,6 +10,7 @@ The app is up and running at [www.adventurealarm.com](www.adventurealarm.com).
 
 The front end uses the following technologies:
 
+-   Typescript
 -   Next.js (React)
 -   Tailwind CSS for styles
 -   Jest for unit testing
@@ -21,6 +22,7 @@ This is deployed at [www.adventurealarm.com](www.adventurealarm.com) and you can
 
 The server is a light api that handle the submission of the form to the database. It use the following technologies:
 
+-   Typescript
 -   Node.js
 -   Express
 -   MongoDB
@@ -36,6 +38,7 @@ The notification server polls through the submissions in the database and checks
 
 It uses the following technologies:
 
+-   Typescript
 -   Node.js
 -   MongoDB
 -   Jest for unit testing
