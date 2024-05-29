@@ -1,8 +1,8 @@
 # Adventure Alarm
 
-Adventure Alarm is a simple weather alarm app that sends you an email when the weather hits the contraints that you set in a particular location.
+Adventure Alarm is a simple weather alarm app that sends you an email when the weather hits the contraints that you set for a particular location.
 
-We set it up as a fun project to practise what I had learned so far and had the help of a mentor to do code reviews and provide feedback. You can look through the comments of the old PRs to see the feedback and how I implemented it if you wish.
+We set it up as a fun project to practise what I had learned so far and was very fortunate to have the help of a mentor to do code reviews and provide feedback. You can look through the comments of the old PRs to see the feedback and how I implemented it if you wish.
 
 The app is up and running at [www.adventurealarm.com](www.adventurealarm.com).
 
